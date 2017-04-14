@@ -1,0 +1,4 @@
+1.	The system shall allow the user to post reviews on listings they’ve rented.
+2.	The system shall allow the user to message the host of a listing.
+3.	The system shall allow the user to send listings to other users. 
+

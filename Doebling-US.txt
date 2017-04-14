@@ -1,0 +1,4 @@
+1.      is a professional, I want to be able to search for available job postings, so that I can find a job.
+2.	As a hiring manager, I want to be able view professional profiles of job candidates, so that I can hire the most qualified individuals.
+3.	As an expert, I want to be able to discuss industry news with my peers, so that I can stay informed on the latest topics in the field.
+
