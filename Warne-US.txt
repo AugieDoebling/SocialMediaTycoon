@@ -1,0 +1,5 @@
+As a hiring coordinator, I want to search for users by degree and previous job titles, so that I can find qualified employees.
+
+As a student, I want to message recruiters, so that I can pursue summer internships.
+
+As a user, I want a feed of profile updates from my contacts, so that I can stay connected.

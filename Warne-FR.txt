@@ -1,0 +1,5 @@
+The system shall display available listings within the city specified by the user.
+
+The system shall allow the user to search listings by specific attributes*.
+
+The system shall display upcoming bookings on the user’s profile.
