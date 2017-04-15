@@ -1,0 +1,4 @@
+The system shall display available rental properties.
+The system shall allow the user to sort rental properties by price and location.
+The system shall display host reviews.
+
