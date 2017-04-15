@@ -1,0 +1,3 @@
+As a job seeker, I would like to post my credentials on Linkedin, so recruiters can contact me.
+As an employee, I would like to connect with my colleagues on Linkedin, so we can have an exclusive professional network.
+As a recruiter, I would to use Linkedin to review job seekers, so I can find qualified candidates.
