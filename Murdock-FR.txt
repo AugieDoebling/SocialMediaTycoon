@@ -1,0 +1,4 @@
+1. 	The system shall display images of the places available for rent.
+2.	The system shall allow the user to create an account through their Facebook or Google Plus account.
+3.	The system shall allow the user to write reviews for places the user has rented from. 
+

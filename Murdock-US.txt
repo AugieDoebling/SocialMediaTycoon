@@ -1,0 +1,6 @@
+As a hiring manager, I want to read more detailed resumes about the people I am interviewing, so that I know they will fit within my company well.
+
+As a college student, I want to create connections with my current classmates, so that I can network with them in the future.  
+
+As a college graduate, I want to search through job openings, so that I can apply to ones that are best suited for me. 
+
