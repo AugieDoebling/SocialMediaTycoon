@@ -1,0 +1,5 @@
+The system shall offer easy, medium, and hard difficulty levels.
+
+The system shall allow the player to purchase upgrades using resources accumulated during gameplay.
+
+The system shall provide the user with different choices about their campaign based on the user's performance within the game.

@@ -1,0 +1,5 @@
+As a user, I want a game that I can finish in less than 20 minutes, so that I can occupy myself during breaks in my schedule.
+
+As a gamer, I want a game that responds to my choices, so that I can test my decision making skills
+
+As a user, I want a game that is different each time I play it, so that I can continue to get enjoyment from playing the same game.
