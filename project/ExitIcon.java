@@ -1,3 +1,5 @@
+package project;
+
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -15,7 +17,7 @@ public class ExitIcon extends Icon
     public void act() 
     {
         if (Greenfoot.mouseClicked(this)) {
-            System.exit(1);
+            System.exit(0);
         }
     }    
 }
