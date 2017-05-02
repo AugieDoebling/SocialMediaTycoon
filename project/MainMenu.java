@@ -55,7 +55,7 @@ public class MainMenu extends World
         getBackground().drawImage(textWelcome, 817, 10);
         
         // Icons
-        ExitIcon exitIcon = new ExitIcon();
+        ExitIcon exitIcon = new ExitIcon(null);
         addObject(exitIcon, 25, 20);
         
         // Text

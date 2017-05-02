@@ -15,7 +15,15 @@ public class About extends World
      */
     public About()
     {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(600, 400, 1); 
+        super(960, 540, 1); 
+        
+        prepare();
+    }
+    
+    public void prepare()
+    {
+        // Icons
+        ExitIcon exitIcon = new ExitIcon(new MainMenu());
+        addObject(exitIcon, 25, 20);
     }
 }
