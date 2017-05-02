@@ -1,3 +1,5 @@
+package project;
+
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -45,13 +47,13 @@ public class MainMenu extends World
         addObject(settingsButton, 613, 332);
         
         // Toolbar
-        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png");//the image that is drawed;
+        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png"); //the image that is drawed;
         getBackground().drawImage(topBar, 0, 0);
         
-        GreenfootImage textMainMenu = new GreenfootImage("text_main_menu.png");//the image that is drawed;
+        GreenfootImage textMainMenu = new GreenfootImage("text_main_menu.png"); //the image that is drawed;
         getBackground().drawImage(textMainMenu, 435, 7);
         
-        GreenfootImage textWelcome = new GreenfootImage("text_welcome.png");//the image that is drawed;
+        GreenfootImage textWelcome = new GreenfootImage("text_welcome.png"); //the image that is drawed;
         getBackground().drawImage(textWelcome, 817, 10);
         
         // Icons
@@ -59,7 +61,7 @@ public class MainMenu extends World
         addObject(exitIcon, 25, 20);
         
         // Text
-        GreenfootImage textGameTitle = new GreenfootImage("text_game_title.png");//the image that is drawed;
+        GreenfootImage textGameTitle = new GreenfootImage("text_game_title.png"); //the image that is drawed;
         getBackground().drawImage(textGameTitle, 291, 107);
     }
 }
