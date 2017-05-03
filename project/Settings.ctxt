@@ -1,5 +1,7 @@
 #BlueJ class context
-comment0.params=
-comment0.target=Settings()
-comment0.text=\n\ Constructor\ for\ objects\ of\ class\ Settings.\n\ \n
-numComments=1
+comment0.target=Settings
+comment0.text=\n\ Write\ a\ description\ of\ class\ Settings\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=
+comment1.target=Settings()
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Settings.\n\ \n
+numComments=2

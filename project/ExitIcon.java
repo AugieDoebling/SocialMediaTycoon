@@ -1,4 +1,4 @@
-package project;
+ 
 
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
@@ -23,7 +23,7 @@ public class ExitIcon extends Icon
     public void act() 
     {
         if (Greenfoot.mouseClicked(this)) {
-<<<<<<< HEAD
+//<<<<<<< HEAD
             if(page == null)
             {
                 System.exit(0);
@@ -32,9 +32,9 @@ public class ExitIcon extends Icon
             {
                 Greenfoot.setWorld(page);
             }
-=======
+//=======
             System.exit(0);
->>>>>>> FETCH_HEAD
+//>>>>>>> FETCH_HEAD
         }
     }    
 }
