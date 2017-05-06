@@ -1,3 +1,0 @@
-1. The system shall display the reviews each home, experience, and place has received. 
-2. The system shall allow the user to cancel a reservation.
-3. The system shall allow the user to become a host. 
