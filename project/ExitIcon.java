@@ -33,7 +33,7 @@ public class ExitIcon extends Icon
                 Greenfoot.setWorld(page);
             }
 //=======
-            System.exit(0);
+           // System.exit(0);
 //>>>>>>> FETCH_HEAD
         }
     }    
