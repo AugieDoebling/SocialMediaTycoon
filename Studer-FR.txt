@@ -1,0 +1,5 @@
+	1.	The system shall display a leaderboard based on the number of followers a player has.  
+	2.	The system shall introduce the features of the game to a new player with a tutorial.  
+	3.	The system shall allow the user to start where they left off.  
+	4.	The system shall send a notification when the user gains a follower.  
+	5.	The system shall wait for confirmation before sending out a tweet.  
