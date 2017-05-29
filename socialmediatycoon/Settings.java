@@ -1,4 +1,4 @@
- 
+package socialmediatycoon; 
 
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
@@ -24,13 +24,13 @@ public class Settings extends World
     
      private void prepare(){
         // Top Toolbar
-        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png"); //the image that is drawed;
+        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png");
         getBackground().drawImage(topBar, 0, 0);
         
         GreenfootImage settingsText = new GreenfootImage("text_settings.png");
         getBackground().drawImage(settingsText, 438, 7);
         
-        GreenfootImage textWelcome = new GreenfootImage("text_welcome.png"); //the image that is drawed;
+        GreenfootImage textWelcome = new GreenfootImage("text_welcome.png");
         getBackground().drawImage(textWelcome, 817, 10);
         
         //Toolbar Icons

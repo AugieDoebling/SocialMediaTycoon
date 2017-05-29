@@ -1,3 +1,5 @@
+package socialmediatycoon;
+
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -31,10 +33,10 @@ public class Tutorial2 extends World
         addObject(previousPage, 340, 470);
         
         // Toolbar
-        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png");//the image that is drawed;
+        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png");
         getBackground().drawImage(topBar, 0, 0);
         
-        GreenfootImage textTutorial = new GreenfootImage("text_tutorial.png");//the image that is drawed;
+        GreenfootImage textTutorial = new GreenfootImage("text_tutorial.png");
         getBackground().drawImage(textTutorial, 460, 7);
         
         // Icons
@@ -48,14 +50,7 @@ public class Tutorial2 extends World
         GreenfootImage step5 = new GreenfootImage("Step5.png"); // tutorial step 2
         getBackground().drawImage(step5, 395, 100);
         
-        //GreenfootImage step3 = new GreenfootImage("Step3.png"); // tutorial step 3
-        //getBackground().drawImage(step3, 680, 100);
-        
         GreenfootImage rightArrow = new GreenfootImage("right_arrow.png"); //right arrow for tutorial
         getBackground().drawImage(rightArrow, 315, 250);
-        //getBackground().drawImage(rightArrow, 608, 250);
-        //getBackground().drawImage(rightArrow, 890, 250);
-        
-       
     }
 }

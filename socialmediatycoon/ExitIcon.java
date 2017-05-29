@@ -1,4 +1,4 @@
- 
+package socialmediatycoon;  
 
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
@@ -11,6 +11,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class ExitIcon extends Icon
 {
     World page = null;
+    
     /**
      * Act - do whatever the ExitIcon wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -23,7 +24,6 @@ public class ExitIcon extends Icon
     public void act() 
     {
         if (Greenfoot.mouseClicked(this)) {
-//<<<<<<< HEAD
             if(page == null)
             {
                 System.exit(0);
@@ -32,9 +32,6 @@ public class ExitIcon extends Icon
             {
                 Greenfoot.setWorld(page);
             }
-//=======
-           // System.exit(0);
-//>>>>>>> FETCH_HEAD
         }
     }    
 }

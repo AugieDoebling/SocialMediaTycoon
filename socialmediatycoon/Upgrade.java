@@ -1,3 +1,5 @@
+package socialmediatycoon;
+
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
@@ -22,16 +24,16 @@ public class Upgrade extends World
     
      private void prepare(){
         // Top Toolbar
-        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png"); //the image that is drawed;
+        GreenfootImage topBar = new GreenfootImage("toolbar_topbar.png");
         getBackground().drawImage(topBar, 0, 0);
         
-        GreenfootImage textUpgrade = new GreenfootImage("text_upgrade.png"); //the image that is drawed;
+        GreenfootImage textUpgrade = new GreenfootImage("text_upgrade.png");
         getBackground().drawImage(textUpgrade, 400, 7);
         
-        GreenfootImage textUsers = new GreenfootImage("text_users.png"); //the image that is drawed;
+        GreenfootImage textUsers = new GreenfootImage("text_users.png");
         getBackground().drawImage(textUsers, 783, 10);
         
-        GreenfootImage textMoney = new GreenfootImage("text_money.png"); //the image that is drawed;
+        GreenfootImage textMoney = new GreenfootImage("text_money.png");
         getBackground().drawImage(textMoney, 871, 10);
         
         //Toolbar Icons
