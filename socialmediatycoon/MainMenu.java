@@ -1,4 +1,4 @@
-package socialmediatycoon; 
+  
 
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
@@ -10,7 +10,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class MainMenu extends World
 {
-
+    public static GreenfootSound bg_music = new GreenfootSound("bg_music.mp3");
+    
     /**
      * Constructor for objects of class MainMenu.
      * 
@@ -20,7 +21,8 @@ public class MainMenu extends World
         // To Set Image: Right click on the name of this class in Green Foot -> Set Image...
         // Create a new world with 2019 x 1320 pixels (default)
         super(960, 540, 1); 
-        
+        bg_music.playLoop();
+        bg_music.setVolume(Settings.soundVol);
         prepare();
     }
     
@@ -29,7 +31,7 @@ public class MainMenu extends World
      * objects and add them to the world.
      */
     private void prepare()
-    {
+    {   
         // Buttons
         NewGameButton newGameButton = new NewGameButton();
         addObject(newGameButton, 310, 250);

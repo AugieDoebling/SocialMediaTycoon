@@ -1,4 +1,4 @@
-package socialmediatycoon;
+ 
 
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
@@ -17,6 +17,8 @@ public class CancelButton extends Button
     public void act() 
     {
         if (Greenfoot.mouseClicked(this)) {
+            Settings.soundVol = Settings.prevLevel;
+            MainMenu.bg_music.setVolume(Settings.prevLevel);
             Greenfoot.setWorld(new MainMenu());
         }
     }    

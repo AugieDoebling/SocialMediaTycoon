@@ -1,4 +1,4 @@
-package socialmediatycoon; 
+  
 
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
@@ -10,7 +10,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Settings extends World
 {
-
+    public static int prevLevel = 50;
+    public static int soundVol = 50;
+    
     /**
      * Constructor for objects of class Settings.
      * 
@@ -47,8 +49,8 @@ public class Settings extends World
         CancelButton cancelButton = new CancelButton();
         addObject(cancelButton, 390, 400);
         
-        GreenfootImage soundBar = new GreenfootImage("image_sound.png");
-        getBackground().drawImage(soundBar, 489, 270);
+        //GreenfootImage soundBar = new GreenfootImage("image_sound.png");
+        //getBackground().drawImage(soundBar, 489, 270);
         
         GreenfootImage fullscreen = new GreenfootImage("text_fullscreen.png");
         getBackground().drawImage(fullscreen, 489, 220);
@@ -61,6 +63,9 @@ public class Settings extends World
         
         DropdownButton fullscreenDropdown = new DropdownButton();
         addObject(fullscreenDropdown, 553, 233);
+        
+        Slider volumeSlider = new Slider(soundVol);
+        addObject(volumeSlider, 567, 283);
     }
 
 }
