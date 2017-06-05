@@ -110,8 +110,10 @@ public class Tweet {
     
     public String send() throws SQLException {        
         Random randomGenerator = new Random();
-    
-        int randomScore = randomGenerator.nextInt(100);
+        int low = 60;
+        int high = 100;           
+        int randomScore = randomGenerator.nextInt(high - low) + low;
+        int rewardLevel;
         int randomAppropriateness;
         
         if (randomScore < 10) {
@@ -127,22 +129,54 @@ public class Tweet {
             throw new SQLException("Can't get database connection");
         }
         
-        con.setAutoCommit(false);
+        con.setAutoCommit(false);       
+        
+        PreparedStatement preparedStatement = con.prepareStatement("select coalesce(reward_id, 0) as reward_id from rewards where player_id = (select id from player where login = ?)");
+        
+        preparedStatement.setString(1, Util.getPlayerLogin());
+        
+        ResultSet result = preparedStatement.executeQuery();        
+        
+        result.next();
+        
+        rewardLevel = result.getInt("reward_id");
+        
+        result.close();
 
-        Statement statement = con.createStatement();
-
-        PreparedStatement preparedStatement = con.prepareStatement("insert into tweet(text, player_id, destination_id, appropriate, score, created_date) "
-                + "                                                 values(?,(select id from player where login = ?),(select id from destination where name = ?),?,?,?)");
+        preparedStatement = con.prepareStatement("insert into tweet(text, player_id, destination_id, appropriate, score, created_date) "
+                    + "values(?,(select id from player where login = ?),(select id from destination where name = ?),?,?,?)");
         
         preparedStatement.setString(1, this.text);
         preparedStatement.setString(2, Util.getPlayerLogin());
         preparedStatement.setString(3, this.destination);        
         preparedStatement.setInt(4, randomAppropriateness);
-        preparedStatement.setInt(5, randomScore);
+        
+        switch (rewardLevel) {
+            case 1:
+                preparedStatement.setInt(5, randomScore);
+                break;
+            case 2:
+                low = 70;
+                high = 100;           
+                randomScore = randomGenerator.nextInt(high - low) + low;
+                preparedStatement.setInt(5, randomScore);
+                break;
+            case 3:
+                low = 80;
+                high = 100;           
+                randomScore = randomGenerator.nextInt(high - low) + low;
+                preparedStatement.setInt(5, randomScore);
+                break;
+            default:
+                low = 1;
+                high = 100;           
+                randomScore = randomGenerator.nextInt(high - low) + low;
+                preparedStatement.setInt(5, randomScore);
+        }
+                
         preparedStatement.setDate(6, new java.sql.Date(this.createdDate.getTime()));
         preparedStatement.executeUpdate();
-        
-        statement.close();
+                
         con.commit();
         con.close();      
         
