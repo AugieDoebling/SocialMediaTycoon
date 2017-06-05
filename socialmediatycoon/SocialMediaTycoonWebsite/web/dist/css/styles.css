@@ -1,0 +1,66 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 9, 2017, 9:59:22 PM
+    Author     : shubhamkahal
+*/
+
+@font-face {
+  font-family: 'Raleway';
+  src: url('../../vendor/fonts/Raleway-Regular.ttf') format('truetype'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}  
+
+.jumbotron {
+    opacity: 0.9;
+}
+
+h1 { color: #95989A; font-family: 'Raleway', serif; font-size: 45px; font-weight: normal; line-height: 48px; margin-top:20px; padding-top:15px; padding-bottom:15px }
+
+form { 
+    margin: 0 auto; 
+    width:250px;
+}
+
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-image: url(../images/Map-Blur.png);
+  background-size:cover;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

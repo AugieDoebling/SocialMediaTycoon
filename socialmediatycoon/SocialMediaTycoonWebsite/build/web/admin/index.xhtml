@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:templates="http://xmlns.jcp.org/jsf/composite/ezcomp">
+    <h:head>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../dist/css/styles.css" rel="stylesheet" type="text/css" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <!-- DataTables CSS -->
+        <link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet" />
+
+        <!-- DataTables Responsive CSS -->
+        <link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet" />
+        
+        <!-- Custom Fonts -->
+        <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+        <script src="../pace/pace.js"></script>
+        <link href="../pace/themes/pace-theme-center-circle.css" rel="stylesheet" />     
+        
+        <!-- Custom CSS -->
+        <link href="../dist/css/user-profile.css" rel="stylesheet" />
+    </h:head>
+    <h:body>
+        <templates:adminNavigation />               
+                                    
+        <div class="container">
+            
+            <h1 class="text-center">Admin Profile</h1>
+            
+            <div class="row">
+                <div class="container col-md-6 col-md-offset-3">
+
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading"></div>
+
+                        <div class="panel-body">
+
+                            <div class="card hovercard">
+                                <div class="cardheader">
+
+                                </div>
+                                <div class="avatar">
+                                    <img alt="" src="http://lorempixel.com/100/100/people/9/" />
+                                </div>
+                                <div class="info">
+                                    <div class="title">
+                                        <h2>#{admin.getFirstName()} #{admin.getLastName()}</h2>
+                                    </div>                                                                        
+                                    <div class="desc"><strong>#{util.getAdminLogin()}</strong></div>                                  
+                                    <div class="desc"><h:link value="Change Password" outcome="changePassword" /></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h:dataTable value="#{tweet.getComplaintsList()}" var="tw" border="1" style="width:100%"
+                                             styleClass="table table-striped table-bordered table-hover" headerClass="table-header" id="complaintsTable">
+
+                <h:column>
+                    <f:facet name="header"> Player </f:facet>
+                        #{tw.player.playerLogin}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"> Tweet </f:facet>
+                        <h:outputText escape="false" value="#{tw.text}"/>                        
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"> Destination </f:facet>
+                        #{tw.destination}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"> Score </f:facet>
+                        #{tw.score}
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header"> Appropriate </f:facet>
+                        #{tw.appropriate}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"> Date </f:facet>                
+                        #{tw.createdDate}
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header"> Warn </f:facet> 
+                    <h:form>
+                        <h:commandLink action="#{tweet.sendWarning(tw.id)}" value="Send Warning">
+                        </h:commandLink>
+                    </h:form>
+                        
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header"> Delete </f:facet>
+                        <h:form>
+                        <h:commandLink action="#{tweet.deleteTweet(tw.id)}" value="Delete Tweet">
+                        </h:commandLink>
+                    </h:form>
+                </h:column>
+                
+
+            </h:dataTable>      
+            
+             <!-- jQuery -->
+            <script src="../vendor/jquery/jquery.min.js"></script>
+
+            <!-- Bootstrap Core JavaScript -->
+            <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+            <!-- DataTables JavaScript -->
+            <script src="../vendor/datatables/js/jquery.dataTables.min.js"></script>
+            <script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+            <script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>
+            
+            <script>
+                $(document).ready(function() {
+                    $('#tweetsTable').DataTable({
+                        responsive: true
+                    });
+                });
+            </script>
+
+        </div> <!-- /container -->
+    </h:body>
+</html>
+
