@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:templates="http://xmlns.jcp.org/jsf/composite/ezcomp">
+    <h:head>
+        <title>Select Destination</title>
+        
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script src="../pace/pace.js"></script>
+        <link href="../pace/themes/pace-theme-center-circle.css" rel="stylesheet" />
+        
+        <style>
+            /* Always set the map height explicitly to define the size of the div
+             * element that contains the map. */
+            #map {
+              height: 100%;
+            }
+            /* Optional: Makes the sample page fill the window. */
+            html, body {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+            }
+            .floating-panel {
+              position: absolute;
+              top: 70px;
+              left: 25%;
+              z-index: 5;
+              background-color: #fff;
+              padding: 5px;
+              border: 1px solid #999;
+              text-align: center;
+              font-family: 'Roboto','sans-serif';
+              line-height: 30px;
+              padding-left: 10px;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <templates:playerNavigation />
+        
+        <h:form styleClass="floating-panel" id="destination-form">
+
+            <input id="address" type="textbox" value="Rome Tor Vergata" />
+            <input id="submit" type="button" class="btn btn-primary" value="Geocode" />
+            <h:inputHidden id="destination" value="#{tweet.destination}" />
+            <h:commandButton value="Select" class="btn btn-primary" style="margin-left:2px" action="#{tweet.saveDestination}" />
+
+        </h:form> 
+        
+        <div id="map"></div>
+        
+        <script> 
+
+          function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 8,              
+              center: {lat: 41.8501, lng: 12.5979}
+            });
+            var geocoder = new google.maps.Geocoder();
+
+            document.getElementById('submit').addEventListener('click', function() {
+              geocodeAddress(geocoder, map);
+              setVars();
+            });
+          }
+
+          function geocodeAddress(geocoder, resultsMap) {
+            var address = document.getElementById('address').value;
+            geocoder.geocode({'address': address}, function(results, status) {
+              if (status === 'OK') {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                  map: resultsMap,
+                  position: results[0].geometry.location
+                });
+              } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+              }
+            });
+          }
+
+            function setVars() {
+                document.getElementById("destination-form:destination").value = document.getElementById('address').value;            
+            }
+        </script>
+    
+        <script async="true" defer="true" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEH5OH_XxgFYmZUEOF2L_Mg2eTsYFuMjg&amp;callback=initMap">
+        </script>
+
+    </h:body>
+</html>
+
