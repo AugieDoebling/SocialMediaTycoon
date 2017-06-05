@@ -1,12 +1,5 @@
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.TimeZone;
 import javax.annotation.ManagedBean;
 import javax.el.ELContext;
 import javax.faces.bean.ManagedProperty;
@@ -40,7 +33,6 @@ public class Admin implements Serializable {
         this.login = login;
     }
     
-    private DBConnect dbConnect = new DBConnect();
     private Integer id;
     private String adminLogin;
     private String adminPassword;
@@ -49,14 +41,6 @@ public class Admin implements Serializable {
     private String lastName;
     private String email;
     private String postalAddress;    
-    
-    public DBConnect getDbConnect() {
-        return dbConnect;
-    }
-
-    public void setDbConnect(DBConnect dbConnect) {
-        this.dbConnect = dbConnect;
-    }
 
     public Integer getId() {
         return id;
