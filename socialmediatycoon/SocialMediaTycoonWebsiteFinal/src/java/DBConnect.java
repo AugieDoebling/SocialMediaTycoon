@@ -8,12 +8,18 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author shubhamkahal
  */
 public class DBConnect {
+	
+	private static final Logger LOGGER = Logger.getLogger( Connection.class.getName());
+
+	
     public Connection getConnection() {
         Connection connection = null;
         try {
@@ -21,9 +27,9 @@ public class DBConnect {
                     "jdbc:postgresql://localhost/SocialMediaTycoon", "postgres",
                     "password");
         } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console");
-            e.printStackTrace();
+            LOGGER.log(Level.FINE, "Connection Failed! Check output console", e);
             return null;
+            
         }
         return connection;
     }

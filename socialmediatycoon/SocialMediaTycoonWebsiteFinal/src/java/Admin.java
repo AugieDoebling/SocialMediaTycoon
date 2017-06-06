@@ -21,6 +21,16 @@ import javax.inject.Named;
 @SessionScoped
 @ManagedBean
 public class Admin extends Person implements Serializable {
+	
+	private DBConnect dbConnect = new DBConnect();
+    private Integer id;
+    private String adminLogin;
+    private String adminPassword;
+    private String adminOldPassword;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String postalAddress; 
 
     @ManagedProperty(value = "#{login}")
     private Login login;
@@ -31,12 +41,7 @@ public class Admin extends Person implements Serializable {
 
     public void setLogin(Login login) {
         this.login = login;
-    }
-    
-    private Integer id;
-    private String adminLogin;
-    private String adminPassword;
-    private String adminOldPassword;  
+    }  
 
     public Integer getId() {
         return id;
@@ -72,7 +77,7 @@ public class Admin extends Person implements Serializable {
     
     public String getAdminLoginFromSession() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
-        Login login = (Login) elContext.getELResolver().getValue(elContext, null, "login");
+        login = (Login) elContext.getELResolver().getValue(elContext, null, "login");
     
         return login.getAdminLogin();
     }

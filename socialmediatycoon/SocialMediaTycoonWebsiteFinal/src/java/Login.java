@@ -26,14 +26,16 @@ import javax.inject.Named;
 @Named(value = "login")
 @SessionScoped
 @ManagedBean
-public class Login implements Serializable {
-    
+public class Login implements Serializable 
+{    
+	private static final String DATABASE_ERROR = "Cant get database connection";
+	
     private String adminLogin;
     private String adminPassword;
     private String playerLogin;
     private String playerPassword;
     private final DBConnect dbConnect = new DBConnect();
-    private UIInput loginUI;    
+    private UIInput loginUI;   
 
     public UIInput getLoginUI() {
         return loginUI;
@@ -77,16 +79,16 @@ public class Login implements Serializable {
     
     public boolean checkPlayerLogin(String login, String password) throws SQLException {
         Connection con = dbConnect.getConnection();
-        String loginDB, passwordDB;
+        String loginDB;
+        String passwordDB;
 
         if (con == null) {
             throw new SQLException("Can't get database connection");
         }
 
-        PreparedStatement ps
-                = con.prepareStatement(
-                        "select login, password from player where"
-                                + " login = ? and password = ?");
+        PreparedStatement ps = con.prepareStatement(
+        		"select login, password from player where login = ? and password = ?");
+        con.close();
         
         ps.setString(1, login);
         ps.setString(2, password);
@@ -101,22 +103,21 @@ public class Login implements Serializable {
         passwordDB = result.getString("password");
         
         result.close();
-        con.close();
         
         return (login.equals(loginDB) && password.equals(passwordDB));
     }
     
     public boolean checkAdminLogin(String login, String password) throws SQLException {
         Connection con = dbConnect.getConnection();
-        String loginDB, passwordDB;
+        String loginDB;
+        String passwordDB;
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(DATABASE_ERROR);
         }
 
         PreparedStatement ps
-                = con.prepareStatement(
-                        "select login, password from admin where"
+                = con.prepareStatement("select login, password from admin where"
                                 + " login = ? and password = ?");
         
         ps.setString(1, login);
@@ -131,15 +132,13 @@ public class Login implements Serializable {
         loginDB = result.getString("login");
         passwordDB = result.getString("password");
         
-        System.out.println(loginDB);
-        System.out.println(passwordDB);
-        
         result.close();
         con.close();
         
         return (login.equals(loginDB) && password.equals(passwordDB));
     }
 
+    @Override
     public void validatePlayer(FacesContext context, UIComponent component, Object value)
             throws ValidatorException, SQLException {
         String submittedLogin = loginUI.getLocalValue().toString();
@@ -151,6 +150,7 @@ public class Login implements Serializable {
         }
     }
     
+    @Override
     public void validateAdmin(FacesContext context, UIComponent component, Object value)
             throws ValidatorException, SQLException {
         String submittedLogin = loginUI.getLocalValue().toString();
@@ -193,13 +193,8 @@ public class Login implements Serializable {
     }
     
     // checks if two dates vary by 1 day or more
-    public boolean dateDifference(Date d1, Date d2) { 
-        long currentDateMilliSec = d1.getTime();
-        long updateDateMilliSec = d2.getTime();
-        long diffDays = (currentDateMilliSec - updateDateMilliSec) / (24 * 60 * 60 * 1000);
-        
-        return true;
-        //return (diffDays >= 1);
+    public boolean dateDifference(Date d1, Date d2) {         
+        return d1.compareTo(d2) > 1;
     }
     
     public Integer updateLoginRecord(String playerLogin) throws SQLException {
@@ -209,13 +204,13 @@ public class Login implements Serializable {
         con.setAutoCommit(false);
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(DATABASE_ERROR);
         }
         
         PreparedStatement ps
-                = con.prepareStatement(
-                        "select count(*) as count from login_record where "
-                                + " player_id = (select id from player where login = ?)");
+                = con.prepareStatement("select count(*) as count from login_record where " +
+                		" player_id = (select id from player where login = ?)");
+        con.commit();
         
         ps.setString(1, playerLogin);
         
@@ -228,7 +223,8 @@ public class Login implements Serializable {
         if (loginCount == 0) {
             ps = con.prepareStatement("insert into login_record(player_id, login_date, count) "
                                     + " values((select id from player where login = ?), now(), 1)");
-
+            con.commit();
+            
             ps.setString(1, playerLogin);
 
             ps.executeUpdate();
@@ -236,7 +232,8 @@ public class Login implements Serializable {
         else {
             ps = con.prepareStatement("select login_date from login_record where "
                                 + " player_id = (select id from player where login = ?)");
-        
+            con.commit();
+            
             ps.setString(1, playerLogin);
 
             result = ps.executeQuery();
@@ -244,18 +241,21 @@ public class Login implements Serializable {
             result.next();
 
             if (dateDifference(new Date(), new Date(result.getDate("login_date").getTime()))) {
-                ps = con.prepareStatement("update login_record set "
-                                    + " player_id = (select id from player where login = ?), login_date = now(), count = count + 1");
-
+                ps = con.prepareStatement("update login_record set player_id "
+                		+ "= (select id from player where login = ?), login_date = now(),"
+                		+ " count = count + 1");
+                con.commit();
+                
                 ps.setString(1, playerLogin);
 
                 ps.executeUpdate();  
             }
         }
         
-        ps = con.prepareStatement(
-                        "select count from login_record where "
-                                + "player_id = (select id from player where login = ?)");
+        ps = con.prepareStatement("select count from login_record where player_id = "
+        		+ "(select id from player where login = ?)");
+        con.commit();
+        con.close(); 
         
         ps.setString(1, playerLogin);
         
@@ -263,10 +263,7 @@ public class Login implements Serializable {
         
         result.next();
         
-        loginCount = result.getInt("count");
-        
-        con.commit();
-        con.close();     
+        loginCount = result.getInt("count");    
         
         return loginCount;
     }
@@ -307,6 +304,7 @@ public class Login implements Serializable {
             ps.executeUpdate();
         }
         
+        ps.close();
         con.commit();
         con.close();     
     }
