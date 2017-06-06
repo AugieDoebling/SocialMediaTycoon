@@ -156,7 +156,7 @@ public class Player extends Person implements Serializable {
             throws ValidatorException, SQLException {
         
         Connection con = dbConnect.getConnection();
-        int count;
+        int count2;
         String submittedLogin = (String) value;
 
         if (con == null) {
@@ -172,9 +172,9 @@ public class Player extends Person implements Serializable {
 
         result.next();
         
-        count = result.getInt(count);
+        count2 = result.getInt(count);
         
-        if (count != 0) {
+        if (count2 != 0) {
             FacesMessage errorMessage = new FacesMessage("This login already exists, please pick another one.");
             throw new ValidatorException(errorMessage);
         }
@@ -187,7 +187,7 @@ public class Player extends Person implements Serializable {
             throws ValidatorException, SQLException {
         
         Connection con = dbConnect.getConnection();
-        int count;
+        int count2;
         String submittedLogin = (String) value;
         
         if (con == null) {
@@ -203,12 +203,12 @@ public class Player extends Person implements Serializable {
 
         result.next();
         
-        count = result.getInt(count);
+        count2 = result.getInt(count);
         
         result.close();
         con.close();
         
-        if (count == 0) {
+        if (count2 == 0) {
             FacesMessage errorMessage = new FacesMessage("This login does not exist.");
             throw new ValidatorException(errorMessage);
         }
@@ -337,7 +337,7 @@ public class Player extends Person implements Serializable {
         String submittedPassword = (String) value;
 
         Connection con = dbConnect.getConnection();
-        int count;
+        int count2;
 
         if (con == null) {
             throw new SQLException(noDBconnection);
@@ -353,9 +353,9 @@ public class Player extends Person implements Serializable {
         
         result.next();
         
-        count = result.getInt(count);
+        count2 = result.getInt(count);
         
-        if (count == 0) {
+        if (count2 == 0) {
             FacesMessage errorMessage = new FacesMessage("Incorrect old password.");
             throw new ValidatorException(errorMessage);
         }
