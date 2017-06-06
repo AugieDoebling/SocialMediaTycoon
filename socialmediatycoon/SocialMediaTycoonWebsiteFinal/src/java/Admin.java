@@ -22,15 +22,10 @@ import javax.inject.Named;
 @ManagedBean
 public class Admin extends Person implements Serializable {
 	
-	private DBConnect dbConnect = new DBConnect();
     private Integer id;
     private String adminLogin;
     private String adminPassword;
     private String adminOldPassword;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String postalAddress; 
 
     @ManagedProperty(value = "#{login}")
     private Login login;
