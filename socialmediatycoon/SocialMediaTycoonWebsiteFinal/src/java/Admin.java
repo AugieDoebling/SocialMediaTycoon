@@ -20,7 +20,7 @@ import javax.inject.Named;
 @Named(value = "admin")
 @SessionScoped
 @ManagedBean
-public class Admin implements Serializable {
+public class Admin extends Person implements Serializable {
 
     @ManagedProperty(value = "#{login}")
     private Login login;
@@ -36,11 +36,7 @@ public class Admin implements Serializable {
     private Integer id;
     private String adminLogin;
     private String adminPassword;
-    private String adminOldPassword;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String postalAddress;    
+    private String adminOldPassword;  
 
     public Integer getId() {
         return id;
@@ -73,39 +69,7 @@ public class Admin implements Serializable {
     public void setAdminOldPassword(String adminOldPassword) {
         this.adminOldPassword = adminOldPassword;
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPostalAddress() {
-        return postalAddress;
-    }
-
-    public void setPostalAddress(String postalAddress) {
-        this.postalAddress = postalAddress;
-    }
-
+    
     public String getAdminLoginFromSession() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         Login login = (Login) elContext.getELResolver().getValue(elContext, null, "login");
