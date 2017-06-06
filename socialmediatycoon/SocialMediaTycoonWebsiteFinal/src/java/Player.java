@@ -32,6 +32,9 @@ public class Player extends Person implements Serializable {
     private String playerLogin;
     private String playerPassword;
     private String playerOldPassword;
+    private String loginString = "login";
+    private String count = "count";
+    private String noDBconnection = "Can't get database connection";
     private Date createdDate = new Date();
     
     public Login getLogin() {
@@ -85,25 +88,25 @@ public class Player extends Person implements Serializable {
 
     public String getPlayerLoginFromSession() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
-        Login login = (Login) elContext.getELResolver().getValue(elContext, null, "login");
+        Login login2 = (Login) elContext.getELResolver().getValue(elContext, null, loginString);
     
-        return login.getPlayerLogin();
+        return login2.getPlayerLogin();
     }
 
     public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date created_date) {
+    public void setCreatedDate(Date createdDate) {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-        this.createdDate = created_date;
+        this.createdDate = createdDate;
     }
     
     public String createPlayer() throws SQLException, ParseException {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -133,7 +136,7 @@ public class Player extends Person implements Serializable {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -157,7 +160,7 @@ public class Player extends Person implements Serializable {
         String submittedLogin = (String) value;
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -169,7 +172,7 @@ public class Player extends Person implements Serializable {
 
         result.next();
         
-        count = result.getInt("count");
+        count = result.getInt(count);
         
         if (count != 0) {
             FacesMessage errorMessage = new FacesMessage("This login already exists, please pick another one.");
@@ -188,7 +191,7 @@ public class Player extends Person implements Serializable {
         String submittedLogin = (String) value;
         
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -200,7 +203,7 @@ public class Player extends Person implements Serializable {
 
         result.next();
         
-        count = result.getInt("count");
+        count = result.getInt(count);
         
         result.close();
         con.close();
@@ -216,7 +219,7 @@ public class Player extends Person implements Serializable {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -233,7 +236,7 @@ public class Player extends Person implements Serializable {
         while (result.next()) {
             Player player = new Player();
 
-            player.setPlayerLogin(result.getString("login"));
+            player.setPlayerLogin(result.getString(loginString));
             player.setFirstName(result.getString("first_name"));
             player.setLastName(result.getString("last_name"));
             player.setEmail(result.getString("email"));
@@ -254,7 +257,7 @@ public class Player extends Person implements Serializable {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -277,7 +280,7 @@ public class Player extends Person implements Serializable {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -293,7 +296,7 @@ public class Player extends Person implements Serializable {
         
         result.next();
         
-        return result.getString("login");
+        return result.getString(loginString);
     }
     
     public void clear() {
@@ -309,7 +312,7 @@ public class Player extends Person implements Serializable {
        Connection con = dbConnect.getConnection();
 
        if (con == null) {
-           throw new SQLException("Can't get database connection");
+           throw new SQLException(noDBconnection);
        }
        con.setAutoCommit(false);
 
@@ -337,7 +340,7 @@ public class Player extends Person implements Serializable {
         int count;
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
@@ -350,7 +353,7 @@ public class Player extends Person implements Serializable {
         
         result.next();
         
-        count = result.getInt("count");
+        count = result.getInt(count);
         
         if (count == 0) {
             FacesMessage errorMessage = new FacesMessage("Incorrect old password.");
@@ -365,7 +368,7 @@ public class Player extends Person implements Serializable {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(noDBconnection);
         }
         
         con.setAutoCommit(false);
