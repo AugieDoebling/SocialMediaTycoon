@@ -30,6 +30,9 @@ public class Tweet {
     private Integer id;
     private String text;
     private String destination = "Rome Tor Vergata";
+    private String dbConnection = "Can't get database connection";
+    private String index = "index";
+    private String player_login = "player_login";
     private Player player = new Player();
     private Integer score;
     private Integer appropriate;
@@ -126,7 +129,7 @@ public class Tweet {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
         
         con.setAutoCommit(false);       
@@ -182,14 +185,14 @@ public class Tweet {
         
         clear();
         
-        return "index";
+        return index;
     }
     
     public String saveDestination() throws SQLException {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
         
         con.setAutoCommit(false);
@@ -214,7 +217,7 @@ public class Tweet {
         List<Tweet> tweetList = new ArrayList<>();
         
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
 
         PreparedStatement preparedStatement
@@ -231,7 +234,7 @@ public class Tweet {
             
             tweet.setText("<span style='" + result.getString("reward_value") + "'> " + result.getString("text") + "</span>");
             
-            tweet.player.setPlayerLogin(result.getString("player_login"));
+            tweet.player.setPlayerLogin(result.getString(player_login));
             
             tweet.setDestination(result.getString("destination_name"));
             
@@ -256,7 +259,7 @@ public class Tweet {
         List<Tweet> tweetList = new ArrayList<>();
         
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
 
         PreparedStatement preparedStatement
@@ -273,7 +276,7 @@ public class Tweet {
             
             tweet.setText("<span style='" + result.getString("reward_value") + "'> " + result.getString("text") + "</span>");
             
-            tweet.player.setPlayerLogin(result.getString("player_login"));
+            tweet.player.setPlayerLogin(result.getString(player_login));
             
             tweet.setDestination(result.getString("destination_name"));
             
@@ -298,7 +301,7 @@ public class Tweet {
         List<Tweet> leaderList = new ArrayList<>();
         
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
 
         PreparedStatement preparedStatement
@@ -310,7 +313,7 @@ public class Tweet {
         while (result.next()) {
             Tweet tweet = new Tweet();                                         
             
-            tweet.player.setPlayerLogin(result.getString("player_login"));
+            tweet.player.setPlayerLogin(result.getString(player_login));
             
             tweet.setScore(result.getInt("sum_score"));                   
    
@@ -328,7 +331,7 @@ public class Tweet {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
         
         con.setAutoCommit(false);
@@ -341,14 +344,15 @@ public class Tweet {
         con.commit();
         con.close();
                 
-        return "index";
+        return index
+        ;
     }
     
     public String deleteTweet(int tweetId) throws SQLException {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
-            throw new SQLException("Can't get database connection");
+            throw new SQLException(dbConnection);
         }
         
         con.setAutoCommit(false);
@@ -361,7 +365,7 @@ public class Tweet {
         con.commit();
         con.close();
                 
-        return "index";
+        return index;
     }
     
     public String checkWarning(Integer warning) {
