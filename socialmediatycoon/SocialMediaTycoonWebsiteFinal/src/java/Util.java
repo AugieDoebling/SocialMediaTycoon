@@ -1,16 +1,13 @@
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.ManagedBean;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,16 +34,6 @@ public class Util implements Serializable {
         HttpSession session = getSession();
         session.setAttribute("adminLogin", adminLogin);
         return "success";
-    }
-
-    public void validateDate(FacesContext context, UIComponent component, Object value)
-    {
-
-        try {
-            Date d = (Date) value;
-        } catch (Exception e) {
-        	LOGGER.log(Level.FINE, "Input is not a valid date", e);
-        }
     }
     
     public static HttpSession getSession() {
