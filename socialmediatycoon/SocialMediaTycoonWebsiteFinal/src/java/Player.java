@@ -23,11 +23,17 @@ import javax.faces.bean.ManagedProperty;
 @Named(value = "player")
 @SessionScoped
 @ManagedBean
-public class Player implements Serializable {
+public class Player extends Person implements Serializable {
 
     @ManagedProperty(value = "#{login}")
     private Login login;
-
+    private DBConnect dbConnect = new DBConnect();
+    private Integer id;
+    private String playerLogin;
+    private String playerPassword;
+    private String playerOldPassword;
+    private Date createdDate = new Date();
+    
     public Login getLogin() {
         return login;
     }
@@ -36,16 +42,6 @@ public class Player implements Serializable {
         this.login = login;
     }
 
-    private DBConnect dbConnect = new DBConnect();
-    private Integer id;
-    private String playerLogin;
-    private String playerPassword;
-    private String playerOldPassword;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String postalAddress;
-    private Date createdDate = new Date();
     
     public DBConnect getDbConnect() {
         return dbConnect;
@@ -87,38 +83,6 @@ public class Player implements Serializable {
         this.playerOldPassword = playerOldPassword;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPostalAddress() {
-        return postalAddress;
-    }
-
-    public void setPostalAddress(String postalAddress) {
-        this.postalAddress = postalAddress;
-    }
-
     public String getPlayerLoginFromSession() {
         ELContext elContext = FacesContext.getCurrentInstance().getELContext();
         Login login = (Login) elContext.getELResolver().getValue(elContext, null, "login");
@@ -149,10 +113,10 @@ public class Player implements Serializable {
         PreparedStatement preparedStatement = con.prepareStatement("insert into player(login, password, first_name, last_name, email, postal_address, created_date) values(?,?,?,?,?,?,?)");
         preparedStatement.setString(1, playerLogin);
         preparedStatement.setString(2, playerPassword);
-        preparedStatement.setString(3, firstName);
-        preparedStatement.setString(4, lastName);
-        preparedStatement.setString(5, email);
-        preparedStatement.setString(6, postalAddress);
+        preparedStatement.setString(3, this.getFirstName());
+        preparedStatement.setString(4, this.getLastName());
+        preparedStatement.setString(5, this.getEmail());
+        preparedStatement.setString(6, this.getPostalAddress());
         preparedStatement.setDate(7, new java.sql.Date(createdDate.getTime()));
         preparedStatement.executeUpdate();
         
@@ -413,8 +377,8 @@ public class Player implements Serializable {
         
         result.next();
         
-        this.firstName = result.getString("first_name");
-        this.lastName = result.getString("last_name");
+        this.setFirstName(result.getString("first_name"));
+        this.setLastName(result.getString("last_name"));
         
         return "userProfile";
     }
