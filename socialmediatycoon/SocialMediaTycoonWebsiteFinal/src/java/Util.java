@@ -1,7 +1,6 @@
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.logging.Level;
 import javax.annotation.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
