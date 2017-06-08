@@ -1,3 +1,4 @@
+package smt;
 
 import java.io.Serializable;
 import javax.annotation.ManagedBean;

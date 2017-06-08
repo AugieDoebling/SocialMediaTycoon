@@ -1,3 +1,5 @@
+package smt;
+
 import java.io.IOException;
 import javax.faces.application.ResourceHandler;
  

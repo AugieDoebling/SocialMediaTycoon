@@ -1,3 +1,4 @@
+package smt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
