@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.annotation.ManagedBean;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
@@ -28,6 +31,7 @@ import javax.inject.Named;
 @ManagedBean
 public class Login implements Serializable 
 {    
+	private static final Logger LOGGER = Logger.getLogger( Connection.class.getName());
 	private static final String DATABASE_ERROR = "Cant get database connection";
 	
     private String adminLogin;
@@ -77,24 +81,37 @@ public class Login implements Serializable
         this.playerPassword = playerPassword;
     }      
     
-    public boolean checkPlayerLogin(String login, String password) throws SQLException {
-        Connection con = dbConnect.getConnection();
+    public boolean checkPlayerLogin(String login, String password) {
+        Connection con;
+        PreparedStatement ps;
         String loginDB;
         String passwordDB;
 
-        if (con == null) {
-            throw new SQLException("Can't get database connection");
+        try
+        {
+        	con = dbConnect.getConnection();
+        	ps = con.prepareStatement("select login, password from player where login = ? and password = ?");
+        	ps.setString(1, login);
+            ps.setString(2, password);
+            
+            ps.executeQuery();
         }
-
-        PreparedStatement ps = con.prepareStatement(
-        		"select login, password from player where login = ? and password = ?");
-        con.close();
-        
-        ps.setString(1, login);
-        ps.setString(2, password);
-        
-        ResultSet result = ps.executeQuery();
-        
+        catch(Exception ex)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, ex);
+        }
+        finally
+        {   
+        	if(ps != null)
+        	{
+        		ps.close();
+        	}
+            if(con != null)
+            {
+            	con.close();
+            }
+        	
+        }
         if (! result.next()) {
             return false;
         }
@@ -109,33 +126,51 @@ public class Login implements Serializable
     
     public boolean checkAdminLogin(String login, String password) throws SQLException {
         Connection con = dbConnect.getConnection();
-        String loginDB;
-        String passwordDB;
+        PreparedStatement statement;
+        String loginName;
+        String passwordName;
+        ResultSet result;
 
         if (con == null) {
             throw new SQLException(DATABASE_ERROR);
         }
 
-        PreparedStatement ps
-                = con.prepareStatement("select login, password from admin where"
-                                + " login = ? and password = ?");
-        
-        ps.setString(1, login);
-        ps.setString(2, password);
-        
-        ResultSet result = ps.executeQuery();
-        
+        try
+        {
+        	statement = con.prepareStatement("select login, password from admin where"
+                            + " login = ? and password = ?");
+    
+        	statement.setString(1, login);
+        	statement.setString(2, password);
+    
+        	statement.executeQuery();
+        }
+        catch(Exception e)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, e);
+        }
+        finally
+        {
+        	if(statement != null)
+        	{
+        		statement.close();
+        	}
+            if(con != null)
+            {
+            	con.close();
+            }
+        }
+                
         if (! result.next()) {
             return false;
         }
 
-        loginDB = result.getString("login");
-        passwordDB = result.getString("password");
+        loginName = result.getString("login");
+        passwordName = result.getString("password");
         
         result.close();
-        con.close();
         
-        return (login.equals(loginDB) && password.equals(passwordDB));
+        return (login.equals(loginName) && password.equals(passwordName));
     }
 
     @Override
@@ -200,68 +235,84 @@ public class Login implements Serializable
     public Integer updateLoginRecord(String playerLogin) throws SQLException {
         Integer loginCount;
         Connection con = dbConnect.getConnection();
+        PreparedStatement ps;
+        ResultSet result;
         
         con.setAutoCommit(false);
-
-        if (con == null) {
-            throw new SQLException(DATABASE_ERROR);
+        
+        try
+        {
+        	ps = con.prepareStatement("select count(*) as count from login_record where " +
+            		" player_id = (select id from player where login = ?)");
+    
+		    ps.setString(1, playerLogin);
+		    
+		    result = ps.executeQuery();
+		    ps.close();
+		    
+		    result.next();
+		    
+		    loginCount = result.getInt("count");
+		
+		    if (loginCount == 0) {
+		        ps = con.prepareStatement("insert into login_record(player_id, login_date, count) "
+		                                + " values((select id from player where login = ?), now(), 1)");
+		        
+		        ps.setString(1, playerLogin);
+		
+		        ps.executeUpdate();
+		        ps.close();
+		    }
+		    else {
+		        ps = con.prepareStatement("select login_date from login_record where "
+		                            + " player_id = (select id from player where login = ?)");
+		        
+		        ps.setString(1, playerLogin);
+		
+		        result = ps.executeQuery();
+		        ps.close();
+		        
+		
+		        result.next();
+		
+		        if (dateDifference(new Date(), new Date(result.getDate("login_date").getTime()))) {
+		            ps = con.prepareStatement("update login_record set player_id "
+		            		+ "= (select id from player where login = ?), login_date = now(),"
+		            		+ " count = count + 1");
+		            con.commit();
+		            
+		            ps.setString(1, playerLogin);
+		
+		            ps.executeUpdate();  
+		            ps.close();
+		        }
+		    }
+		    
+		    ps = con.prepareStatement("select count from login_record where player_id = "
+		    		+ "(select id from player where login = ?)");
+		    
+		    ps.setString(1, playerLogin);
+	        
+	        result = ps.executeQuery();
+	        
+	        result.next();
         }
-        
-        PreparedStatement ps
-                = con.prepareStatement("select count(*) as count from login_record where " +
-                		" player_id = (select id from player where login = ?)");
-        con.commit();
-        
-        ps.setString(1, playerLogin);
-        
-        ResultSet result = ps.executeQuery();
-        
-        result.next();
-        
-        loginCount = result.getInt("count");
-
-        if (loginCount == 0) {
-            ps = con.prepareStatement("insert into login_record(player_id, login_date, count) "
-                                    + " values((select id from player where login = ?), now(), 1)");
-            con.commit();
-            
-            ps.setString(1, playerLogin);
-
-            ps.executeUpdate();
+        catch(Exception ex)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, ex);
         }
-        else {
-            ps = con.prepareStatement("select login_date from login_record where "
-                                + " player_id = (select id from player where login = ?)");
-            con.commit();
-            
-            ps.setString(1, playerLogin);
-
-            result = ps.executeQuery();
-
-            result.next();
-
-            if (dateDifference(new Date(), new Date(result.getDate("login_date").getTime()))) {
-                ps = con.prepareStatement("update login_record set player_id "
-                		+ "= (select id from player where login = ?), login_date = now(),"
-                		+ " count = count + 1");
-                con.commit();
-                
-                ps.setString(1, playerLogin);
-
-                ps.executeUpdate();  
+        finally
+        {
+        	if(ps != null)
+        	{
+        		ps.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
             }
         }
-        
-        ps = con.prepareStatement("select count from login_record where player_id = "
-        		+ "(select id from player where login = ?)");
-        con.commit();
-        con.close(); 
-        
-        ps.setString(1, playerLogin);
-        
-        result = ps.executeQuery();
-        
-        result.next();
         
         loginCount = result.getInt("count");    
         
@@ -272,40 +323,51 @@ public class Login implements Serializable
         Connection con = dbConnect.getConnection();
         
         con.setAutoCommit(false);
-
-        if (con == null) {
-            throw new SQLException("Can't get database connection");
-        }
         
         PreparedStatement ps;                
 
-        if (loginCount > 1 && loginCount <= 10) {
-            ps = con.prepareStatement("insert into rewards(reward_id, player_id) "
-                                    + " values(1, (select id from player where login = ?)) ON CONFLICT DO NOTHING");
+        try
+        {
+        	if (loginCount > 1 && loginCount <= 10) {
+                ps = con.prepareStatement("insert into rewards(reward_id, player_id) "
+                                        + " values(1, (select id from player where login = ?)) ON CONFLICT DO NOTHING");
 
-            ps.setString(1, playerLogin);
+                ps.setString(1, playerLogin);
 
-            ps.executeUpdate();
+                ps.executeUpdate();
+            }
+            else if (loginCount > 10 && loginCount <= 20) {
+                ps = con.prepareStatement("update rewards set reward_id = 2 where "
+                                        + "player_id = (select id from player where login = ?)");
+
+                ps.setString(1, playerLogin);
+
+                ps.executeUpdate();
+            }
+            else if (loginCount > 20) {
+                ps = con.prepareStatement("update rewards set reward_id = 3 where "
+                                        + "player_id = (select id from player where login = ?)");
+
+                ps.setString(1, playerLogin);
+
+                ps.executeUpdate();
+            }
         }
-        else if (loginCount > 10 && loginCount <= 20) {
-            ps = con.prepareStatement("update rewards set reward_id = 2 where "
-                                    + "player_id = (select id from player where login = ?)");
-
-            ps.setString(1, playerLogin);
-
-            ps.executeUpdate();
+        catch(Exception ex)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, ex);
         }
-        else if (loginCount > 20) {
-            ps = con.prepareStatement("update rewards set reward_id = 3 where "
-                                    + "player_id = (select id from player where login = ?)");
-
-            ps.setString(1, playerLogin);
-
-            ps.executeUpdate();
-        }
-        
-        ps.close();
-        con.commit();
-        con.close();     
+        finally
+        {
+        	if(ps != null)
+        	{
+        		ps.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
+            }
+        }  
     }
 }

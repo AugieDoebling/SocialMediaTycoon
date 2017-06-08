@@ -154,8 +154,6 @@ public class Player extends Person implements Serializable {
 
     public ResultSet executeSelectQuery(String submittedLogin) {
         Connection con = dbConnect.getConnection();
-        int count;
-        String submittedLogin = (String) value;
         
         if (con == null) {
             throw new SQLException(noDBconnection);
@@ -167,45 +165,38 @@ public class Player extends Person implements Serializable {
         preparedStatement.setString(1, submittedLogin);
         
         ResultSet result = preparedStatement.executeQuery();
-
+        
+        con.close();
         return result;
     }
     
     public void validateLogin(FacesContext context, UIComponent component, Object value)
             throws ValidatorException, SQLException {                
-        int count;
         String submittedLogin = (String) value;
 
         ResultSet result = executeQuery(submittedLogin);
 
         result.next();
-        
-        count = result.getInt(count);
-        
-        if (count != 0) {
+                
+        if (result.getInt(count) != 0) {
             FacesMessage errorMessage = new FacesMessage("This login already exists, please pick another one.");
             throw new ValidatorException(errorMessage);
         }
         
         result.close();
-        con.close();
     }
     
     public void validateLoginExistence(FacesContext context, UIComponent component, Object value)
             throws ValidatorException, SQLException {                
-        int count;
         String submittedLogin = (String) value;
         
         ResultSet result = executeSelectQuery(submittedLogin);
 
         result.next();
         
-        count = result.getInt(count);
-        
         result.close();
-        con.close();
         
-        if (count == 0) {
+        if (result.getInt(count) == 0) {
             FacesMessage errorMessage = new FacesMessage("This login does not exist.");
             throw new ValidatorException(errorMessage);
         }

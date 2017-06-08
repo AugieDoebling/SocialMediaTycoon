@@ -25,13 +25,15 @@ import javax.inject.Named;
 @Named(value = "tweet")
 @SessionScoped
 @ManagedBean
-public class Tweet {
+public class Tweet 
+{
+	private static final String INDEX = "index";
+	
     private DBConnect dbConnect = new DBConnect();
     private Integer id;
     private String text;
     private String destination = "Rome Tor Vergata";
     private String dbConnection = "Can't get database connection";
-    private String index = "index";
     private String playerLogin = "player_login";
     private Player player = new Player();
     private Integer score;
@@ -185,7 +187,7 @@ public class Tweet {
         
         clear();
         
-        return index;
+        return INDEX;
     }
     
     public String saveDestination() throws SQLException {
@@ -345,16 +347,16 @@ public class Tweet {
         con.close();
     }
     
-    public String sendWarning(int tweetId) throws SQLException {
+    public String sendWarning(int tweetId) {
         executeUpdateQuery("update tweet set warning = 1 where id = ?", tweetId);
                 
-        return "index";
+        return INDEX;
     }
     
-    public String deleteTweet(int tweetId) throws SQLException {
+    public String deleteTweet(int tweetId) {
         executeUpdateQuery("delete from tweet where id = ?", tweetId);
                 
-        return "index";
+        return INDEX;
     }
     
     public String checkWarning(Integer warning) {
