@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Admin.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;SocialMediaTycoon&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">smt</a> &gt; <span class="el_source">Admin.java</span></div><h1>Admin.java</h1><pre class="source lang-java linenums">package smt;
+
+import java.io.Serializable;
+import javax.annotation.ManagedBean;
+import javax.el.ELContext;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author shubhamkahal
+ */
+@Named(value = &quot;admin&quot;)
+@SessionScoped
+@ManagedBean
+<span class="fc" id="L24">public class Admin extends Person implements Serializable {</span>
+	
+    private Integer id;
+    private String adminLogin;
+    private String adminPassword;
+    private String adminOldPassword;
+
+    @ManagedProperty(value = &quot;#{login}&quot;)
+    private Login login;
+
+    public Login getLogin() {
+<span class="nc" id="L35">        return login;</span>
+    }
+
+    public void setLogin(Login login) {
+<span class="nc" id="L39">        this.login = login;</span>
+<span class="nc" id="L40">    }  </span>
+
+    public Integer getId() {
+<span class="nc" id="L43">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="nc" id="L47">        this.id = id;</span>
+<span class="nc" id="L48">    }</span>
+    
+    public String getAdminLogin() {
+<span class="nc" id="L51">        return adminLogin;</span>
+    }
+
+    public void setAdminLogin(String adminLogin) {
+<span class="nc" id="L55">        this.adminLogin = adminLogin;</span>
+<span class="nc" id="L56">    }</span>
+
+    public String getAdminPassword() {
+<span class="fc" id="L59">        return adminPassword;</span>
+    }
+
+    public void setAdminPassword(String adminPassword) {
+<span class="fc" id="L63">        this.adminPassword = adminPassword;</span>
+<span class="fc" id="L64">    }</span>
+
+    public String getAdminOldPassword() {
+<span class="nc" id="L67">        return adminOldPassword;</span>
+    }
+
+    public void setAdminOldPassword(String adminOldPassword) {
+<span class="nc" id="L71">        this.adminOldPassword = adminOldPassword;</span>
+<span class="nc" id="L72">    }</span>
+    
+    public String getAdminLoginFromSession() {
+<span class="nc" id="L75">        ELContext elContext = FacesContext.getCurrentInstance().getELContext();</span>
+<span class="nc" id="L76">        login = (Login) elContext.getELResolver().getValue(elContext, null, &quot;login&quot;);</span>
+    
+<span class="nc" id="L78">        return login.getAdminLogin();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

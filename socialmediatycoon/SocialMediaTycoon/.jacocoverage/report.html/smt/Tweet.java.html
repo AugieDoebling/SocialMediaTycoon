@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Tweet.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;SocialMediaTycoon&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">smt</a> &gt; <span class="el_source">Tweet.java</span></div><h1>Tweet.java</h1><pre class="source lang-java linenums">package smt;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.annotation.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author shubhamkahal
+ */
+@Named(value = &quot;tweet&quot;)
+@SessionScoped
+@ManagedBean
+<span class="fc" id="L30">public class Tweet {</span>
+
+<span class="fc" id="L32">    private static final Logger LOGGER = Logger.getLogger(Tweet.class.getName());</span>
+    private static final String DATABASE_ERROR = &quot;Cant get database connection&quot;;
+
+    private static final String INDEX = &quot;index&quot;;
+
+<span class="fc" id="L37">    private DBConnect dbConnect = new DBConnect();</span>
+    private Integer id;
+    private String text;
+<span class="fc" id="L40">    private String destination = &quot;Rome Tor Vergata&quot;;</span>
+<span class="fc" id="L41">    private String playerLogin = &quot;player_login&quot;;</span>
+<span class="fc" id="L42">    private Player player = new Player();</span>
+    private Integer score;
+    private Integer appropriate;
+    private Integer warning;
+<span class="fc" id="L46">    private Date createdDate = new Date();</span>
+
+    public Integer getId() {
+<span class="fc" id="L49">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="fc" id="L53">        this.id = id;</span>
+<span class="fc" id="L54">    }</span>
+
+    public DBConnect getDbConnect() {
+<span class="nc" id="L57">        return dbConnect;</span>
+    }
+
+    public void setDbConnect(DBConnect dbConnect) {
+<span class="nc" id="L61">        this.dbConnect = dbConnect;</span>
+<span class="nc" id="L62">    }</span>
+
+    public String getText() {
+<span class="fc" id="L65">        return text;</span>
+    }
+
+    public void setText(String text) {
+<span class="fc" id="L69">        this.text = text;</span>
+<span class="fc" id="L70">    }</span>
+
+    public String getDestination() {
+<span class="fc" id="L73">        return destination;</span>
+    }
+
+    public void setDestination(String destination) {
+<span class="fc" id="L77">        this.destination = destination;</span>
+<span class="fc" id="L78">    }</span>
+
+    public Player getPlayer() {
+<span class="fc" id="L81">        return player;</span>
+    }
+
+    public void setPlayer(Player player) {
+<span class="nc" id="L85">        this.player = player;</span>
+<span class="nc" id="L86">    }</span>
+
+    public int getScore() {
+<span class="fc" id="L89">        return score;</span>
+    }
+
+    public void setScore(Integer score) {
+<span class="fc" id="L93">        this.score = score;</span>
+<span class="fc" id="L94">    }</span>
+
+    public int getAppropriate() {
+<span class="nc" id="L97">        return appropriate;</span>
+    }
+
+    public void setAppropriate(Integer appropriate) {
+<span class="fc" id="L101">        this.appropriate = appropriate;</span>
+<span class="fc" id="L102">    }</span>
+
+    public Integer getWarning() {
+<span class="nc" id="L105">        return warning;</span>
+    }
+
+    public void setWarning(Integer warning) {
+<span class="nc" id="L109">        this.warning = warning;</span>
+<span class="nc" id="L110">    }</span>
+
+    public Date getCreatedDate() {
+<span class="nc" id="L113">        return createdDate;</span>
+    }
+
+    public void setCreatedDate(Date createdDate) {
+<span class="fc" id="L117">        this.createdDate = createdDate;</span>
+<span class="fc" id="L118">    }</span>
+
+    public String send() throws SQLException {
+<span class="nc" id="L121">        Random randomGenerator = new Random();</span>
+<span class="nc" id="L122">        int low = 60;</span>
+<span class="nc" id="L123">        int high = 100;</span>
+<span class="nc" id="L124">        int randomScore = randomGenerator.nextInt(high - low) + low;</span>
+<span class="nc" id="L125">        int rewardLevel = 0;</span>
+        int randomAppropriateness;
+<span class="nc" id="L127">        Connection con = null;</span>
+<span class="nc" id="L128">        PreparedStatement preparedStatement = null;</span>
+<span class="nc" id="L129">        ResultSet result = null;</span>
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (randomScore &lt; 10) {</span>
+<span class="nc" id="L132">            randomAppropriateness = 0;</span>
+        } else {
+<span class="nc" id="L134">            randomAppropriateness = 1;</span>
+        }
+
+        try {
+<span class="nc" id="L138">            con = dbConnect.getConnection();</span>
+
+<span class="nc" id="L140">            con.setAutoCommit(false);</span>
+
+<span class="nc" id="L142">            preparedStatement = con.prepareStatement(&quot;select coalesce(reward_id, 0) as reward_id from rewards where player_id = (select id from player where login = ?)&quot;);</span>
+
+<span class="nc" id="L144">            preparedStatement.setString(1, Util.getPlayerLogin());</span>
+
+<span class="nc" id="L146">            result = preparedStatement.executeQuery();</span>
+
+<span class="nc" id="L148">            result.next();</span>
+
+<span class="nc" id="L150">            rewardLevel = result.getInt(&quot;reward_id&quot;);</span>
+<span class="nc" id="L151">        } catch (Exception exception) {</span>
+<span class="nc" id="L152">            LOGGER.log(Level.FINE, DATABASE_ERROR, exception);</span>
+        } finally {
+<span class="nc bnc" id="L154" title="All 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="nc" id="L155">                preparedStatement.close();</span>
+            }
+<span class="nc bnc" id="L157" title="All 6 branches missed.">            if (result != null) {</span>
+<span class="nc" id="L158">                result.close();</span>
+            }
+        }
+
+        try {
+<span class="nc" id="L163">            preparedStatement = con.prepareStatement(&quot;insert into tweet(text, player_id, destination_id, appropriate, score, created_date) &quot;</span>
+                    + &quot;values(?,(select id from player where login = ?),(select id from destination where name = ?),?,?,?)&quot;);
+
+<span class="nc" id="L166">            preparedStatement.setString(1, this.text);</span>
+<span class="nc" id="L167">            preparedStatement.setString(2, Util.getPlayerLogin());</span>
+<span class="nc" id="L168">            preparedStatement.setString(3, this.destination);</span>
+<span class="nc" id="L169">            preparedStatement.setInt(4, randomAppropriateness);</span>
+
+<span class="nc bnc" id="L171" title="All 4 branches missed.">            switch (rewardLevel) {</span>
+                case 1:
+<span class="nc" id="L173">                    preparedStatement.setInt(5, randomScore);</span>
+<span class="nc" id="L174">                    break;</span>
+                case 2:
+<span class="nc" id="L176">                    low = 70;</span>
+<span class="nc" id="L177">                    high = 100;</span>
+<span class="nc" id="L178">                    randomScore = randomGenerator.nextInt(high - low) + low;</span>
+<span class="nc" id="L179">                    preparedStatement.setInt(5, randomScore);</span>
+<span class="nc" id="L180">                    break;</span>
+                case 3:
+<span class="nc" id="L182">                    low = 80;</span>
+<span class="nc" id="L183">                    high = 100;</span>
+<span class="nc" id="L184">                    randomScore = randomGenerator.nextInt(high - low) + low;</span>
+<span class="nc" id="L185">                    preparedStatement.setInt(5, randomScore);</span>
+<span class="nc" id="L186">                    break;</span>
+                default:
+<span class="nc" id="L188">                    low = 1;</span>
+<span class="nc" id="L189">                    high = 100;</span>
+<span class="nc" id="L190">                    randomScore = randomGenerator.nextInt(high - low) + low;</span>
+<span class="nc" id="L191">                    preparedStatement.setInt(5, randomScore);</span>
+            }
+
+<span class="nc" id="L194">            preparedStatement.setDate(6, new java.sql.Date(this.createdDate.getTime()));</span>
+<span class="nc" id="L195">            preparedStatement.executeUpdate();</span>
+<span class="nc" id="L196">        } catch (Exception exception) {</span>
+<span class="nc" id="L197">            LOGGER.log(Level.FINE, DATABASE_ERROR, exception);</span>
+        } finally {
+<span class="nc bnc" id="L199" title="All 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="nc" id="L200">                preparedStatement.close();</span>
+            }
+<span class="nc bnc" id="L202" title="All 6 branches missed.">            if (con != null) {</span>
+<span class="nc" id="L203">                con.commit();</span>
+<span class="nc" id="L204">                con.close();</span>
+            }
+<span class="nc bnc" id="L206" title="All 6 branches missed.">            if (result != null) {</span>
+<span class="nc" id="L207">                result.close();</span>
+            }
+        }
+
+<span class="nc" id="L211">        clear();</span>
+
+<span class="nc" id="L213">        return INDEX;</span>
+    }
+
+    public String saveDestination() throws SQLException{
+<span class="nc" id="L217">        Connection con = null;</span>
+<span class="nc" id="L218">        PreparedStatement preparedStatement = null;</span>
+
+        try {
+<span class="nc" id="L221">            con = dbConnect.getConnection();</span>
+
+<span class="nc" id="L223">            con.setAutoCommit(false);</span>
+
+<span class="nc" id="L225">            preparedStatement = con.prepareStatement(&quot;insert into destination(name) values(?) &quot;</span>
+                    + &quot;                                                 ON CONFLICT (name) DO NOTHING;&quot;);
+
+<span class="nc" id="L228">            preparedStatement.setString(1, this.destination);</span>
+<span class="nc" id="L229">            preparedStatement.executeUpdate();</span>
+<span class="nc" id="L230">        } catch (Exception exc) {</span>
+<span class="nc" id="L231">            LOGGER.log(Level.FINE, DATABASE_ERROR, exc);</span>
+        } finally {
+<span class="nc bnc" id="L233" title="All 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="nc" id="L234">                preparedStatement.close();</span>
+            }
+<span class="nc bnc" id="L236" title="All 6 branches missed.">            if (con != null) {</span>
+<span class="nc" id="L237">                con.commit();</span>
+<span class="nc" id="L238">                con.close();</span>
+            }
+        }
+
+<span class="nc" id="L242">        return &quot;sendTweet&quot;;</span>
+    }
+
+    public List&lt;Tweet&gt; getTweetList() throws SQLException{
+<span class="nc" id="L246">        Connection con = dbConnect.getConnection();</span>
+<span class="nc" id="L247">        List&lt;Tweet&gt; tweetList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L248">        PreparedStatement preparedStatement = null;</span>
+<span class="nc" id="L249">        ResultSet result = null;</span>
+
+        try {
+<span class="nc" id="L252">            preparedStatement</span>
+<span class="nc" id="L253">                    = con.prepareStatement(&quot;select text, login as player_login, destination.name as destination_name, tweet.score, tweet.warning, coalesce(reward.value, '') as reward_value, tweet.created_date from &quot;</span>
+                            + &quot;tweet join player on tweet.player_id = player.id left join rewards on rewards.player_id = player.id &quot;
+                            + &quot; left join reward on rewards.reward_id = reward.id join destination on tweet.destination_id = destination.id where player.login = ?&quot;);
+
+<span class="nc" id="L257">            preparedStatement.setString(1, Util.getPlayerLogin());</span>
+
+<span class="nc" id="L259">            result = preparedStatement.executeQuery();</span>
+
+<span class="nc bnc" id="L261" title="All 2 branches missed.">            while (result.next()) {</span>
+<span class="nc" id="L262">                Tweet tweet = new Tweet();</span>
+
+<span class="nc" id="L264">                tweet.setText(&quot;&lt;span style='&quot; + result.getString(&quot;reward_value&quot;) + &quot;'&gt; &quot; + result.getString(&quot;text&quot;) + &quot;&lt;/span&gt;&quot;);</span>
+
+<span class="nc" id="L266">                tweet.player.setPlayerLogin(result.getString(playerLogin));</span>
+
+<span class="nc" id="L268">                tweet.setDestination(result.getString(&quot;destination_name&quot;));</span>
+
+<span class="nc" id="L270">                tweet.setScore(result.getInt(&quot;score&quot;));</span>
+
+<span class="nc" id="L272">                tweet.setWarning(result.getInt(&quot;warning&quot;));</span>
+
+<span class="nc" id="L274">                tweet.setCreatedDate(result.getDate(&quot;created_date&quot;));</span>
+
+                //store all data into a List
+<span class="nc" id="L277">                tweetList.add(tweet);</span>
+<span class="nc" id="L278">            }</span>
+<span class="nc" id="L279">        } catch (Exception exce) {</span>
+<span class="nc" id="L280">            LOGGER.log(Level.FINE, DATABASE_ERROR, exce);</span>
+        } finally {
+<span class="nc bnc" id="L282" title="All 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="nc" id="L283">                preparedStatement.close();</span>
+            }
+<span class="nc bnc" id="L285" title="All 6 branches missed.">            if (con != null) {</span>
+<span class="nc" id="L286">                con.close();</span>
+            }
+<span class="nc bnc" id="L288" title="All 6 branches missed.">            if (result != null) {</span>
+<span class="nc" id="L289">                result.close();</span>
+            }
+        }
+
+<span class="nc" id="L293">        return tweetList;</span>
+    }
+
+    public List&lt;Tweet&gt; getComplaintsList() throws SQLException{
+<span class="nc" id="L297">        Connection conn = dbConnect.getConnection();</span>
+<span class="nc" id="L298">        List&lt;Tweet&gt; tweetList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L299">        PreparedStatement preparedStatement = null;</span>
+<span class="nc" id="L300">        ResultSet res = null;</span>
+
+        try {
+<span class="nc" id="L303">            preparedStatement = conn.prepareStatement(&quot;select tweet.id, text, login as player_login, destination.name as destination_name, tweet.score, tweet.appropriate, coalesce(reward.value, '') as reward_value, tweet.created_date from &quot;</span>
+                    + &quot;tweet join player on tweet.player_id = player.id left join rewards on rewards.player_id = player.id &quot;
+                    + &quot; left join reward on rewards.reward_id = reward.id join destination on tweet.destination_id = destination.id where tweet.appropriate = 0&quot;);
+
+<span class="nc" id="L307">            res = preparedStatement.executeQuery();</span>
+
+<span class="nc bnc" id="L309" title="All 2 branches missed.">            while (res.next()) {</span>
+<span class="nc" id="L310">                Tweet tweet = new Tweet();</span>
+
+<span class="nc" id="L312">                tweet.setId(res.getInt(&quot;id&quot;));</span>
+
+<span class="nc" id="L314">                tweet.setText(&quot;&lt;span style='&quot; + res.getString(&quot;reward_value&quot;) + &quot;'&gt; &quot; + res.getString(&quot;text&quot;) + &quot;&lt;/span&gt;&quot;);</span>
+
+<span class="nc" id="L316">                tweet.player.setPlayerLogin(res.getString(playerLogin));</span>
+
+<span class="nc" id="L318">                tweet.setDestination(res.getString(&quot;destination_name&quot;));</span>
+
+<span class="nc" id="L320">                tweet.setScore(res.getInt(&quot;score&quot;));</span>
+
+<span class="nc" id="L322">                tweet.setAppropriate(res.getInt(&quot;appropriate&quot;));</span>
+
+<span class="nc" id="L324">                tweet.setCreatedDate(res.getDate(&quot;created_date&quot;));</span>
+
+                //store all data into a List
+<span class="nc" id="L327">                tweetList.add(tweet);</span>
+<span class="nc" id="L328">            }</span>
+<span class="nc" id="L329">        } catch (Exception excepti) {</span>
+<span class="nc" id="L330">            LOGGER.log(Level.FINE, DATABASE_ERROR, excepti);</span>
+        } finally {
+<span class="nc bnc" id="L332" title="All 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="nc" id="L333">                preparedStatement.close();</span>
+            }
+<span class="nc bnc" id="L335" title="All 6 branches missed.">            if (conn != null) {</span>
+<span class="nc" id="L336">                conn.close();</span>
+            }
+<span class="nc bnc" id="L338" title="All 6 branches missed.">            if (res != null) {</span>
+<span class="nc" id="L339">                res.close();</span>
+            }
+        }
+
+<span class="nc" id="L343">        return tweetList;</span>
+    }
+
+    public List&lt;Tweet&gt; getLeaderList() throws SQLException{
+<span class="fc" id="L347">        Connection con = dbConnect.getConnection();</span>
+<span class="fc" id="L348">        List&lt;Tweet&gt; leaderList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L349">        PreparedStatement preparedStatement = null;</span>
+<span class="fc" id="L350">        ResultSet result = null;</span>
+
+        try {
+<span class="fc" id="L353">            preparedStatement</span>
+<span class="fc" id="L354">                    = con.prepareStatement(&quot;select login as player_login, sum(tweet.score) as sum_score from &quot;</span>
+                            + &quot;tweet join player on tweet.player_id = player.id group by player.id order by sum_score desc&quot;);
+
+<span class="fc" id="L357">            result = preparedStatement.executeQuery();</span>
+
+<span class="fc bfc" id="L359" title="All 2 branches covered.">            while (result.next()) {</span>
+<span class="fc" id="L360">                Tweet tweet = new Tweet();</span>
+
+<span class="fc" id="L362">                tweet.player.setPlayerLogin(result.getString(playerLogin));</span>
+
+<span class="fc" id="L364">                tweet.setScore(result.getInt(&quot;sum_score&quot;));</span>
+
+                //store all data into a List
+<span class="fc" id="L367">                leaderList.add(tweet);</span>
+<span class="fc" id="L368">            }</span>
+<span class="nc" id="L369">        } catch (Exception e) {</span>
+<span class="nc" id="L370">            LOGGER.log(Level.FINE, DATABASE_ERROR, e);</span>
+        } finally {
+<span class="pc bpc" id="L372" title="5 of 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="pc" id="L373">                preparedStatement.close();</span>
+            }
+<span class="pc bpc" id="L375" title="5 of 6 branches missed.">            if (con != null) {</span>
+<span class="pc" id="L376">                con.close();</span>
+            }
+<span class="pc bpc" id="L378" title="5 of 6 branches missed.">            if (result != null) {</span>
+<span class="pc" id="L379">                result.close();</span>
+            }
+        }
+
+<span class="fc" id="L383">        return leaderList;</span>
+    }
+
+    public void executeUpdateQuery(String query, Integer tweetId) 
+            throws SQLException{
+<span class="nc" id="L388">        Connection con = dbConnect.getConnection();</span>
+<span class="nc" id="L389">        PreparedStatement preparedStatement = null;</span>
+
+        try {
+<span class="nc" id="L392">            con.setAutoCommit(false);</span>
+
+<span class="nc" id="L394">            preparedStatement = con.prepareStatement(query);</span>
+
+<span class="nc" id="L396">            preparedStatement.setInt(1, tweetId);</span>
+<span class="nc" id="L397">            preparedStatement.executeUpdate();</span>
+<span class="nc" id="L398">        } catch (Exception something) {</span>
+<span class="nc" id="L399">            LOGGER.log(Level.FINE, DATABASE_ERROR, something);</span>
+        } finally {
+<span class="nc bnc" id="L401" title="All 6 branches missed.">            if (preparedStatement != null) {</span>
+<span class="nc" id="L402">                preparedStatement.close();</span>
+            }
+<span class="nc bnc" id="L404" title="All 6 branches missed.">            if (con != null) {</span>
+<span class="nc" id="L405">                con.commit();</span>
+<span class="nc" id="L406">                con.close();</span>
+            }
+        }
+<span class="nc" id="L409">    }</span>
+
+    public String sendWarning(int tweetId) throws SQLException {
+<span class="nc" id="L412">        executeUpdateQuery(&quot;update tweet set warning = 1 where id = ?&quot;, tweetId);</span>
+
+<span class="nc" id="L414">        return INDEX;</span>
+    }
+
+    public String deleteTweet(int tweetId) throws SQLException {
+<span class="nc" id="L418">        executeUpdateQuery(&quot;delete from tweet where id = ?&quot;, tweetId);</span>
+
+<span class="nc" id="L420">        return INDEX;</span>
+    }
+
+    public String checkWarning(Integer warning) {
+<span class="nc bnc" id="L424" title="All 4 branches missed.">        if (warning != null &amp;&amp; warning.equals(1)) {</span>
+<span class="nc" id="L425">            return &quot;text-danger&quot;;</span>
+        }
+
+<span class="nc" id="L428">        return &quot;&quot;;</span>
+    }
+
+    public void clear() {
+<span class="fc" id="L432">        setText(null);</span>
+<span class="fc" id="L433">        setDestination(null);</span>
+<span class="fc" id="L434">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
