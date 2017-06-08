@@ -7,8 +7,8 @@ public class TestAdmin {
 	@Test
 	public void testPassword()
 	{
-		Admin A = new Admin();
-		String actual = A.setAdminPassword("password");
+		Admin admin  = new Admin();
+		String actual = admin.setAdminPassword("password");
 		String expected = "password";
 		assertEquals(expected, actual);
 	}
@@ -16,8 +16,8 @@ public class TestAdmin {
 	@Test 
 	public void testFirstName()
 	{
-		Admin A = new Admin();
-		String actual = A.setFirstName("Joe");
+		Admin admin = new Admin();
+		String actual = admin.setFirstName("Joe");
 		String expected = "Joe";
 		assertEquals(expected, actual);
 	}
