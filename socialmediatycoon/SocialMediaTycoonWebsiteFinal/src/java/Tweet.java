@@ -326,8 +326,8 @@ public class Tweet {
         
         return leaderList;
     }
-    
-    public String sendWarning(int tweetId) throws SQLException {
+
+    public void executeUpdateQuery(String query, Integer tweetId) {
         Connection con = dbConnect.getConnection();
 
         if (con == null) {
@@ -336,36 +336,25 @@ public class Tweet {
         
         con.setAutoCommit(false);
         
-        PreparedStatement preparedStatement = con.prepareStatement("update tweet set warning = 1 where id = ?");
+        PreparedStatement preparedStatement = con.prepareStatement(query);
         
         preparedStatement.setInt(1, tweetId);
         preparedStatement.executeUpdate();
 
         con.commit();
         con.close();
+    }
+    
+    public String sendWarning(int tweetId) throws SQLException {
+        executeUpdateQuery("update tweet set warning = 1 where id = ?", tweetId);
                 
-        return index
-        ;
+        return "index";
     }
     
     public String deleteTweet(int tweetId) throws SQLException {
-        Connection con = dbConnect.getConnection();
-
-        if (con == null) {
-            throw new SQLException(dbConnection);
-        }
-        
-        con.setAutoCommit(false);
-        
-        PreparedStatement preparedStatement = con.prepareStatement("delete from tweet where id = ?");
-        
-        preparedStatement.setInt(1, tweetId);
-        preparedStatement.executeUpdate();
-
-        con.commit();
-        con.close();
+        executeUpdateQuery("delete from tweet where id = ?", tweetId);
                 
-        return index;
+        return "index";
     }
     
     public String checkWarning(Integer warning) {
