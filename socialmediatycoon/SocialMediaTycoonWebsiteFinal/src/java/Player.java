@@ -17,6 +17,9 @@ import javax.inject.Named;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.el.ELContext;
 import javax.faces.bean.ManagedProperty;
 
@@ -24,6 +27,9 @@ import javax.faces.bean.ManagedProperty;
 @SessionScoped
 @ManagedBean
 public class Player extends Person implements Serializable {
+	
+	private static final Logger LOGGER = Logger.getLogger( Connection.class.getName());
+	private static final String DATABASE_ERROR = "Cant get database connection";
 
     @ManagedProperty(value = "#{login}")
     private Login login;
@@ -104,6 +110,8 @@ public class Player extends Person implements Serializable {
     
     public String createPlayer() throws SQLException, ParseException {
         Connection con = dbConnect.getConnection();
+        Statement statement;
+        PreparedStatement preparedStatement;
 
         if (con == null) {
             throw new SQLException(noDBconnection);
@@ -111,37 +119,53 @@ public class Player extends Person implements Serializable {
         
         con.setAutoCommit(false);
 
-        Statement statement = con.createStatement();
+        try
+        {
+        	statement = con.createStatement();
 
-        PreparedStatement preparedStatement = con.prepareStatement("insert into player(login, password, first_name, last_name, email, postal_address, created_date) values(?,?,?,?,?,?,?)");
-        preparedStatement.setString(1, playerLogin);
-        preparedStatement.setString(2, playerPassword);
-        preparedStatement.setString(3, this.getFirstName());
-        preparedStatement.setString(4, this.getLastName());
-        preparedStatement.setString(5, this.getEmail());
-        preparedStatement.setString(6, this.getPostalAddress());
-        preparedStatement.setDate(7, new java.sql.Date(createdDate.getTime()));
-        preparedStatement.executeUpdate();
-        
-        statement.close();
-        con.commit();
-        con.close();      
+            preparedStatement = con.prepareStatement("insert into player(login, password, first_name, last_name, email, postal_address, created_date) values(?,?,?,?,?,?,?)");
+            preparedStatement.setString(1, playerLogin);
+            preparedStatement.setString(2, playerPassword);
+            preparedStatement.setString(3, this.getFirstName());
+            preparedStatement.setString(4, this.getLastName());
+            preparedStatement.setString(5, this.getEmail());
+            preparedStatement.setString(6, this.getPostalAddress());
+            preparedStatement.setDate(7, new java.sql.Date(createdDate.getTime()));
+            preparedStatement.executeUpdate();
+        }
+        catch(Exception ex)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, ex);
+        }
+        finally
+        {
+        	if(statement != null)
+        	{
+        		statement.close();
+        	}
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+        	if(con != null)
+        	{
+        		con.commit();
+        		con.close();
+        	}
+        }    
         
         clear();
         
         return "index";
     }
     
-    public String deletePlayer(String playerLogin) throws SQLException, ParseException {
+    public String deletePlayer(String playerLogin) throws ParseException {
         Connection con = dbConnect.getConnection();
-
-        if (con == null) {
-            throw new SQLException(noDBconnection);
-        }
+        PreparedStatement preparedStatement
         
         con.setAutoCommit(false);
         
-        PreparedStatement preparedStatement = con.prepareStatement("delete from player where login = ?");
+         = con.prepareStatement("delete from player where login = ?");
         
         preparedStatement.setString(1, playerLogin);
         preparedStatement.executeUpdate();
