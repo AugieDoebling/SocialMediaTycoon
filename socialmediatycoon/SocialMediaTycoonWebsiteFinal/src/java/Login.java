@@ -31,7 +31,7 @@ import javax.inject.Named;
 @ManagedBean
 public class Login implements Serializable 
 {    
-	private static final Logger LOGGER = Logger.getLogger( Connection.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
 	private static final String DATABASE_ERROR = "Cant get database connection";
 	
     private String adminLogin;

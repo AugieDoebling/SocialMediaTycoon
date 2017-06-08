@@ -161,36 +161,66 @@ public class Player extends Person implements Serializable {
     
     public String deletePlayer(String playerLogin) throws ParseException {
         Connection con = dbConnect.getConnection();
-        PreparedStatement preparedStatement
+        PreparedStatement preparedStatement;
         
-        con.setAutoCommit(false);
-        
-         = con.prepareStatement("delete from player where login = ?");
-        
-        preparedStatement.setString(1, playerLogin);
-        preparedStatement.executeUpdate();
-
-        con.commit();
-        con.close();
+        try
+        {
+        	con.setAutoCommit(false);
+            
+            preparedStatement = con.prepareStatement("delete from player where login = ?");
+            
+            preparedStatement.setString(1, playerLogin);
+            preparedStatement.executeUpdate();
+        }
+        catch(Exception ex)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, ex);
+        }
+        finally
+        {
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
+            }
+        }
                 
         return "viewPlayers";
     }
 
     public ResultSet executeSelectQuery(String submittedLogin) {
         Connection con = dbConnect.getConnection();
+        PreparedStatement preparedStatement;
+        ResultSet result;
         
-        if (con == null) {
-            throw new SQLException(noDBconnection);
-        }
-        
-        con.setAutoCommit(false);
+        try
+        {
+        	con.setAutoCommit(false);
 
-        PreparedStatement preparedStatement = con.prepareStatement("select count(*) as count from player where login = ?");
-        preparedStatement.setString(1, submittedLogin);
-        
-        ResultSet result = preparedStatement.executeQuery();
-        
-        con.close();
+            preparedStatement = con.prepareStatement("select count(*) as count from player where login = ?");
+            preparedStatement.setString(1, submittedLogin);
+            
+            result = preparedStatement.executeQuery();
+        }
+        catch(Exception some)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, some);
+        }
+        finally
+        {
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(con != null)
+            {
+            	con.close();
+            }
+        }
         return result;
     }
     

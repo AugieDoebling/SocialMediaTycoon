@@ -17,7 +17,7 @@ public class TestPlayerInfo {
 		testPlayer.setPostalAddress("111 Main St.");
       String expectFirst = "Andrew";
       String expectLast = "Rose";
-      String expectEmail = "testemail@gmail.com");
+      String expectEmail = "testemail@gmail.com";
       String expectAddress = "111 Main St.";
 		
 		assertEquals(expectFirst, testPlayer.getFirstName());
