@@ -1,6 +1,5 @@
 package test;
 import static org.junit.Assert.*;
-import Logic.WeightConversions;
 
 import org.junit.Test;
 
