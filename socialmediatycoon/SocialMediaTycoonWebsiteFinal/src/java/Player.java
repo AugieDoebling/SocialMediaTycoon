@@ -151,43 +151,10 @@ public class Player extends Person implements Serializable {
                 
         return "viewPlayers";
     }
-    
-    public void validateLogin(FacesContext context, UIComponent component, Object value)
-            throws ValidatorException, SQLException {
-        
+
+    public ResultSet executeSelectQuery(String submittedLogin) {
         Connection con = dbConnect.getConnection();
-        int count2;
-        String submittedLogin = (String) value;
-
-        if (con == null) {
-            throw new SQLException(noDBconnection);
-        }
-        
-        con.setAutoCommit(false);
-
-        PreparedStatement preparedStatement = con.prepareStatement("Select count(*) as count from player where login = ?");
-        preparedStatement.setString(1, submittedLogin);
-        
-        ResultSet result = preparedStatement.executeQuery();
-
-        result.next();
-        
-        count2 = result.getInt(count);
-        
-        if (count2 != 0) {
-            FacesMessage errorMessage = new FacesMessage("This login already exists, please pick another one.");
-            throw new ValidatorException(errorMessage);
-        }
-        
-        result.close();
-        con.close();
-    }
-    
-    public void validateLoginExistence(FacesContext context, UIComponent component, Object value)
-            throws ValidatorException, SQLException {
-        
-        Connection con = dbConnect.getConnection();
-        int count2;
+        int count;
         String submittedLogin = (String) value;
         
         if (con == null) {
@@ -201,14 +168,44 @@ public class Player extends Person implements Serializable {
         
         ResultSet result = preparedStatement.executeQuery();
 
+        return result;
+    }
+    
+    public void validateLogin(FacesContext context, UIComponent component, Object value)
+            throws ValidatorException, SQLException {                
+        int count;
+        String submittedLogin = (String) value;
+
+        ResultSet result = executeQuery(submittedLogin);
+
         result.next();
         
-        count2 = result.getInt(count);
+        count = result.getInt(count);
+        
+        if (count != 0) {
+            FacesMessage errorMessage = new FacesMessage("This login already exists, please pick another one.");
+            throw new ValidatorException(errorMessage);
+        }
+        
+        result.close();
+        con.close();
+    }
+    
+    public void validateLoginExistence(FacesContext context, UIComponent component, Object value)
+            throws ValidatorException, SQLException {                
+        int count;
+        String submittedLogin = (String) value;
+        
+        ResultSet result = executeSelectQuery(submittedLogin);
+
+        result.next();
+        
+        count = result.getInt(count);
         
         result.close();
         con.close();
         
-        if (count2 == 0) {
+        if (count == 0) {
             FacesMessage errorMessage = new FacesMessage("This login does not exist.");
             throw new ValidatorException(errorMessage);
         }
