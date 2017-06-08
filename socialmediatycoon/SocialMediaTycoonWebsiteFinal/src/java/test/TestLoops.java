@@ -97,6 +97,6 @@ public class TestLoops {
 
                 expectedPlayerList.add(player);
 
-                assertArrayEquals(expectedTweetList.toArray(), actualTweetList.toArray());
+                assertArrayEquals(expectedPlayerList.toArray(), actualPlayerList.toArray());
         }
 }

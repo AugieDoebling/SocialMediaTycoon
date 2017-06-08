@@ -3,7 +3,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +38,6 @@ public class Tweet
     private Integer id;
     private String text;
     private String destination = "Rome Tor Vergata";
-    private String dbConnection = "Can't get database connection";
     private String playerLogin = "player_login";
     private Player player = new Player();
     private Integer score;
@@ -152,8 +150,26 @@ public class Tweet
             result.next();
             
             rewardLevel = result.getInt("reward_id");
-            
-            preparedStatement = con.prepareStatement("insert into tweet(text, player_id, destination_id, appropriate, score, created_date) "
+        }
+        catch(Exception exception)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, exception);
+        }
+        finally
+        {   
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(result != null)
+            {
+            	result.close();
+            }
+        }   
+        
+        try
+        {
+        	preparedStatement = con.prepareStatement("insert into tweet(text, player_id, destination_id, appropriate, score, created_date) "
                     + "values(?,(select id from player where login = ?),(select id from destination where name = ?),?,?,?)");
         
 	        preparedStatement.setString(1, this.text);
@@ -197,17 +213,17 @@ public class Tweet
         	{
         		preparedStatement.close();
         	}
-            if(con != null)
-            {
-            	con.commit();
-            	con.close();
-            }
+        	if(con != null)
+        	{
+        		con.commit();
+        		con.close();
+        	}
             if(result != null)
             {
             	result.close();
             }
-        	
-        }      
+        } 
+        
         
         clear();
         
@@ -217,7 +233,6 @@ public class Tweet
     public String saveDestination()
     {
         Connection con;
-        Statement statement;
         PreparedStatement preparedStatement;
         
         try
@@ -225,8 +240,6 @@ public class Tweet
         	con = dbConnect.getConnection();
             
             con.setAutoCommit(false);
-
-            statement = con.createStatement();
 
             preparedStatement = con.prepareStatement("insert into destination(name) values(?) "
                     + "                                                 ON CONFLICT (name) DO NOTHING;");
@@ -243,10 +256,6 @@ public class Tweet
         	if(preparedStatement != null)
         	{
         		preparedStatement.close();
-        	}
-        	if(statement != null)
-        	{
-        		statement.close();
         	}
         	if(con != null)
         	{
@@ -318,43 +327,43 @@ public class Tweet
     }
     
     public List<Tweet> getComplaintsList() {
-        Connection con = dbConnect.getConnection();
+        Connection conn = dbConnect.getConnection();
         List<Tweet> tweetList = new ArrayList<>();
         PreparedStatement preparedStatement;
-        ResultSet result;
+        ResultSet res;
         
         try
         {
-        	preparedStatement = con.prepareStatement("select tweet.id, text, login as player_login, destination.name as destination_name, tweet.score, tweet.appropriate, coalesce(reward.value, '') as reward_value, tweet.created_date from "
+        	preparedStatement = conn.prepareStatement("select tweet.id, text, login as player_login, destination.name as destination_name, tweet.score, tweet.appropriate, coalesce(reward.value, '') as reward_value, tweet.created_date from "
                     + "tweet join player on tweet.player_id = player.id left join rewards on rewards.player_id = player.id "
                     + " left join reward on rewards.reward_id = reward.id join destination on tweet.destination_id = destination.id where tweet.appropriate = 0");               
     
-		    result  = preparedStatement.executeQuery();        
+		    res  = preparedStatement.executeQuery();        
 		
-		    while (result.next()) {
+		    while (res.next()) {
 		        Tweet tweet = new Tweet();      
 		        
-		        tweet.setId(result.getInt("id"));
+		        tweet.setId(res.getInt("id"));
 		        
-		        tweet.setText("<span style='" + result.getString("reward_value") + "'> " + result.getString("text") + "</span>");
+		        tweet.setText("<span style='" + res.getString("reward_value") + "'> " + res.getString("text") + "</span>");
 		        
-		        tweet.player.setPlayerLogin(result.getString(playerLogin));
+		        tweet.player.setPlayerLogin(res.getString(playerLogin));
 		        
-		        tweet.setDestination(result.getString("destination_name"));
+		        tweet.setDestination(res.getString("destination_name"));
 		        
-		        tweet.setScore(result.getInt("score"));
+		        tweet.setScore(res.getInt("score"));
 		        
-		        tweet.setAppropriate(result.getInt("appropriate"));
+		        tweet.setAppropriate(res.getInt("appropriate"));
 		        
-		        tweet.setCreatedDate(result.getDate("created_date"));          
+		        tweet.setCreatedDate(res.getDate("created_date"));          
 		
 		        //store all data into a List
 		        tweetList.add(tweet);
 		    }
         }
-        catch(Exception exce)
+        catch(Exception excepti)
         {
-        	LOGGER.log(Level.FINE, DATABASE_ERROR, exce);
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, excepti);
         }
         finally
         {
@@ -362,13 +371,13 @@ public class Tweet
         	{
         		preparedStatement.close();
         	}
-            if(con != null)
+            if(conn != null)
             {
-            	con.close();
+            	conn.close();
             }
-            if(result != null)
+            if(res != null)
             {
-            	result.close();
+            	res.close();
             }
         }
         

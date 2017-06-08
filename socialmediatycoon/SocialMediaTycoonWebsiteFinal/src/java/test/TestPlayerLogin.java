@@ -20,12 +20,12 @@ public class TestPlayerLogin {
 	@Test
 	public void testPlayerPassword() {
 		Player testPlayer = new Player();
-		testPlayer.setPlayerOldPassword("password");
-		testPlayer.setPlayerPassword("password1");
-		String expectedOldPassword = "password";
-		String expectedPassword = "password1";
+		testPlayer.setPlayerOldPassword("pass");
+		testPlayer.setPlayerPassword("pass1");
+		String expectedOldPass = "pass";
+		String expectedPass = "pass1";
 		
-		assertEquals(expectedOldPassword, testPlayer.getPlayerOldPassword());
-		assertEquals(expectedPassword, testPlayer.getPlayerPassword());
+		assertEquals(expectedOldPass, testPlayer.getPlayerOldPassword());
+		assertEquals(expectedPass, testPlayer.getPlayerPassword());
 	}
 }

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import javax.annotation.ManagedBean;
@@ -110,7 +109,6 @@ public class Player extends Person implements Serializable {
     
     public String createPlayer() throws SQLException, ParseException {
         Connection con = dbConnect.getConnection();
-        Statement statement;
         PreparedStatement preparedStatement;
 
         if (con == null) {
@@ -121,8 +119,6 @@ public class Player extends Person implements Serializable {
 
         try
         {
-        	statement = con.createStatement();
-
             preparedStatement = con.prepareStatement("insert into player(login, password, first_name, last_name, email, postal_address, created_date) values(?,?,?,?,?,?,?)");
             preparedStatement.setString(1, playerLogin);
             preparedStatement.setString(2, playerPassword);
@@ -139,10 +135,6 @@ public class Player extends Person implements Serializable {
         }
         finally
         {
-        	if(statement != null)
-        	{
-        		statement.close();
-        	}
         	if(preparedStatement != null)
         	{
         		preparedStatement.close();
@@ -194,17 +186,17 @@ public class Player extends Person implements Serializable {
 
     public ResultSet executeSelectQuery(String submittedLogin) {
         Connection con = dbConnect.getConnection();
-        PreparedStatement preparedStatement;
+        PreparedStatement prepState;
         ResultSet result;
         
         try
         {
         	con.setAutoCommit(false);
 
-            preparedStatement = con.prepareStatement("select count(*) as count from player where login = ?");
-            preparedStatement.setString(1, submittedLogin);
+            prepState = con.prepareStatement("select count(*) as count from player where login = ?");
+            prepState.setString(1, submittedLogin);
             
-            result = preparedStatement.executeQuery();
+            result = prepState.executeQuery();
         }
         catch(Exception some)
         {
@@ -212,9 +204,9 @@ public class Player extends Person implements Serializable {
         }
         finally
         {
-        	if(preparedStatement != null)
+        	if(prepState != null)
         	{
-        		preparedStatement.close();
+        		prepState.close();
         	}
             if(con != null)
             {
@@ -256,89 +248,155 @@ public class Player extends Person implements Serializable {
         }
     }
     
-    public List<Player> getPlayerList() throws SQLException {
+    public List<Player> getPlayerList() {
 
         Connection con = dbConnect.getConnection();
-
-        if (con == null) {
-            throw new SQLException(noDBconnection);
-        }
+        PreparedStatement preparedState;
+        ResultSet result;
+        List<Player> playerList;
         
-        con.setAutoCommit(false);
+        try
+        {
+        	con.setAutoCommit(false);
 
-        PreparedStatement preparedStatement
-                = con.prepareStatement(
-                        "select login, first_name, last_name, email, postal_address, created_date from player order by first_name, last_name");
+            preparedState
+                    = con.prepareStatement(
+                            "select login, first_name, last_name, email, postal_address, created_date from player order by first_name, last_name");
 
-        //get customer data from database
-        ResultSet result = preparedStatement.executeQuery();
+            //get customer data from database
+            result = preparedState.executeQuery();
 
-        List<Player> playerList = new ArrayList<>();
+            playerList = new ArrayList<>();
 
-        while (result.next()) {
-            Player player = new Player();
+            while (result.next()) {
+                Player player = new Player();
 
-            player.setPlayerLogin(result.getString(loginString));
-            player.setFirstName(result.getString("first_name"));
-            player.setLastName(result.getString("last_name"));
-            player.setEmail(result.getString("email"));
-            player.setPostalAddress(result.getString("postal_address"));
-            player.setCreatedDate(result.getDate("created_date"));
+                player.setPlayerLogin(result.getString(loginString));
+                player.setFirstName(result.getString("first_name"));
+                player.setLastName(result.getString("last_name"));
+                player.setEmail(result.getString("email"));
+                player.setPostalAddress(result.getString("postal_address"));
+                player.setCreatedDate(result.getDate("created_date"));
 
-            //store all data into a List
-            playerList.add(player);
+                //store all data into a List
+                playerList.add(player);
+            }
+            
         }
-        
-        result.close();
-        con.close();
+        catch(Exception whatever)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, whatever);
+        }
+        finally
+        {   
+        	if(preparedState != null)
+        	{
+        		preparedState.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
+            }
+            if(result != null)
+            {
+            	result.close();
+            }
+        	
+        }
         
         return playerList;
     }
     
-    public Integer getPlayerId(String playerLogin) throws SQLException {
+    public Integer getPlayerId(String playerLogin) {
         Connection con = dbConnect.getConnection();
+        PreparedStatement preparedStatement;
+        ResultSet result;
+        int value;
+        
+        try
+        {
+        	con.setAutoCommit(false);
 
-        if (con == null) {
-            throw new SQLException(noDBconnection);
+            preparedStatement
+                    = con.prepareStatement(
+                            "select id from player where login = ?");
+
+            preparedStatement.setString(1, playerLogin);
+            
+            //get customer data from database
+            result = preparedStatement.executeQuery();
+            
+            result.next();
+            value = result.getInt("id");
+        }
+        catch(Exception what)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, what);
+        }
+        finally
+        {
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
+            }
+            if(result != null)
+            {
+            	result.close();
+            }
         }
         
-        con.setAutoCommit(false);
-
-        PreparedStatement preparedStatement
-                = con.prepareStatement(
-                        "select id from player where login = ?");
-
-        preparedStatement.setString(1, playerLogin);
-        
-        //get customer data from database
-        ResultSet result = preparedStatement.executeQuery();
-        
-        result.next();
-        
-        return result.getInt("id");
+        return value;
     }
     
-    public String getPlayerLoginFromId(Integer id) throws SQLException {
+    public String getPlayerLoginFromId(Integer id) {
         Connection con = dbConnect.getConnection();
+        PreparedStatement preparedStatement;
+        ResultSet result;
+        String value;
+        
+        try
+        {
+        	con.setAutoCommit(false);
 
-        if (con == null) {
-            throw new SQLException(noDBconnection);
+            preparedStatement
+                    = con.prepareStatement(
+                            "select login from player where id = ?");
+
+            preparedStatement.setInt(1, id);
+            
+            //get customer data from database
+            result = preparedStatement.executeQuery();
+            
+            result.next();
+            value = result.getString(loginString);
         }
-        
-        con.setAutoCommit(false);
-
-        PreparedStatement preparedStatement
-                = con.prepareStatement(
-                        "select login from player where id = ?");
-
-        preparedStatement.setInt(1, id);
-        
-        //get customer data from database
-        ResultSet result = preparedStatement.executeQuery();
-        
-        result.next();
-        
-        return result.getString(loginString);
+        catch(Exception myName)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, myName);
+        }
+        finally
+        {
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
+            }
+            if(result != null)
+            {
+            	result.close();
+            }
+        }
+        return value;
     }
     
     public void clear() {
@@ -350,81 +408,130 @@ public class Player extends Person implements Serializable {
         setPostalAddress(null);        
     }
     
-    public String changePassword() throws SQLException {
+    public String changePassword() {
        Connection con = dbConnect.getConnection();
-
-       if (con == null) {
-           throw new SQLException(noDBconnection);
-       }
+       PreparedStatement preparedStatement;
        con.setAutoCommit(false);
+       
 
-       Statement statement = con.createStatement();
-
-       PreparedStatement preparedStatement = con.prepareStatement("update player set password = ? where login = ?");
-       preparedStatement.setString(1, playerPassword);
-       preparedStatement.setString(2, Util.getPlayerLogin());
-       preparedStatement.executeUpdate();
-
-       statement.close();
-       con.commit();
-       con.close();
+       try
+       {
+    	   preparedStatement = con.prepareStatement("update player set password = ? where login = ?");
+           preparedStatement.setString(1, playerPassword);
+           preparedStatement.setString(2, Util.getPlayerLogin());
+           preparedStatement.executeUpdate();
+       }
+       catch(Exception hello)
+       {
+    	   LOGGER.log(Level.FINE, DATABASE_ERROR, hello);
+       }
+       finally
+       {
+    	   if(preparedStatement != null)
+	       	{
+	       		preparedStatement.close();
+	       	}
+           if(con != null)
+           {
+           	con.commit();
+           	con.close();
+           }
+       }
        clear();
 
        return "index";
     }
     
     public void validateOldPassword(FacesContext context, UIComponent component, Object value)
-            throws ValidatorException, SQLException {
+            throws ValidatorException {
         
         String submittedPassword = (String) value;
 
         Connection con = dbConnect.getConnection();
         int count2;
+        PreparedStatement preparedStatement;
+        ResultSet result;
+        
+        try
+        {
+        	con.setAutoCommit(false);
 
-        if (con == null) {
-            throw new SQLException(noDBconnection);
+            preparedStatement = con.prepareStatement("select count(*) as count from player where login = ? and password = ?");
+            preparedStatement.setString(1, Util.getPlayerLogin());
+            preparedStatement.setString(2, submittedPassword);
+            
+            result = preparedStatement.executeQuery();
+            
+            result.next();
+            
+            count2 = result.getInt(count);
+            
+            if (count2 == 0) {
+                FacesMessage errorMessage = new FacesMessage("Incorrect old password.");
+                throw new ValidatorException(errorMessage);
+            }
         }
-        
-        con.setAutoCommit(false);
-
-        PreparedStatement preparedStatement = con.prepareStatement("select count(*) as count from player where login = ? and password = ?");
-        preparedStatement.setString(1, Util.getPlayerLogin());
-        preparedStatement.setString(2, submittedPassword);
-        
-        ResultSet result = preparedStatement.executeQuery();
-        
-        result.next();
-        
-        count2 = result.getInt(count);
-        
-        if (count2 == 0) {
-            FacesMessage errorMessage = new FacesMessage("Incorrect old password.");
-            throw new ValidatorException(errorMessage);
+        catch(Exception ex)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, ex);
         }
-        
-        result.close();
-        con.close();
+        finally
+        {
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(con != null)
+            {
+            	con.commit(); 
+            	con.close();
+            }
+            if(result != null)
+            {
+            	result.close();
+            }
+        }
     }
     
-    public String setPlayerProfile() throws SQLException  {
+    public String setPlayerProfile()  {
         Connection con = dbConnect.getConnection();
+        PreparedStatement preparedStatement;
+        ResultSet result;
+        
+        try
+        {
+        	con.setAutoCommit(false);
 
-        if (con == null) {
-            throw new SQLException(noDBconnection);
+            preparedStatement = con.prepareStatement("select first_name, last_name from player where login = ?");
+            preparedStatement.setString(1, Util.getPlayerLogin());
+            
+            result = preparedStatement.executeQuery();
+            
+            result.next();
+            
+            this.setFirstName(result.getString("first_name"));
+            this.setLastName(result.getString("last_name"));
         }
-        
-        con.setAutoCommit(false);
-
-        PreparedStatement preparedStatement = con.prepareStatement("select first_name, last_name from player where login = ?");
-        preparedStatement.setString(1, Util.getPlayerLogin());
-        
-        ResultSet result = preparedStatement.executeQuery();
-        
-        result.next();
-        
-        this.setFirstName(result.getString("first_name"));
-        this.setLastName(result.getString("last_name"));
-        
+        catch(Exception except)
+        {
+        	LOGGER.log(Level.FINE, DATABASE_ERROR, except);
+        }
+        finally
+        {   
+        	if(preparedStatement != null)
+        	{
+        		preparedStatement.close();
+        	}
+            if(con != null)
+            {
+            	con.commit();
+            	con.close();
+            }
+            if(result != null)
+            {
+            	result.close();
+            }
+        }
         return "userProfile";
     }
 }
